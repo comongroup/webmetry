@@ -1,4 +1,5 @@
-function Webmetry(conf) {
+/* eslint-disable */
+export default function Webmetry(conf) {
 	var self = this;
 	self.currentLine = null;
 	self.currentConfig = {};
@@ -226,4 +227,3 @@ function Webmetry(conf) {
 
 	init();
 }
-window.webmetry = new Webmetry(window.webmetry);

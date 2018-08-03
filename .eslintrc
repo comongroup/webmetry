@@ -5,18 +5,20 @@
 		"mocha": true
 	},
 	"extends": [
-		"eslint:recommended"
+		"standard"
 	],
 	"globals": {
 		"expect": true
 	},
 	"parserOptions": {
 		"ecmaVersion": 6,
-		"parser": "babel-eslint"
+		"parser": "babel-eslint",
+		"sourceType": "module"
 	},
 	"rules": {
 		"brace-style": ["error", "stroustrup"],
 		"indent": ["error", "tab", { "SwitchCase": 1 }],
+		"no-console": "off",
 		"no-extra-semi": "error",
 		"no-tabs": "off",
 		"semi": ["error", "always"],

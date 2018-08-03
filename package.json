@@ -20,7 +20,7 @@
 	"scripts": {
 		"build": "webpack --config ./webpack.prod.js",
 		"lint": "eslint --ext .js src",
-		"start": "webpack --config ./webpack.dev.js"
+		"start": "webpack --watch --config ./webpack.dev.js"
 	},
 	"browserslist": [
 		"> 1%",
@@ -41,7 +41,12 @@
 		"css-loader": "^1.0.0",
 		"cssnano": "^4.0.5",
 		"eslint": "^5.2.0",
+		"eslint-config-standard": "^11.0.0",
 		"eslint-loader": "^2.1.0",
+		"eslint-plugin-import": "^2.13.0",
+		"eslint-plugin-node": "^7.0.1",
+		"eslint-plugin-promise": "^3.8.0",
+		"eslint-plugin-standard": "^3.1.0",
 		"file-loader": "^1.1.11",
 		"html-loader": "^0.5.5",
 		"node-sass": "^4.9.2",

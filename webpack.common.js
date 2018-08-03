@@ -1,5 +1,5 @@
 const path = require('path');
-const package = require('./package.json');
+const pkg = require('./package.json');
 const webpack = require('webpack');
 
 const resolve = function(dir) {
@@ -14,7 +14,7 @@ const cssnano = require('cssnano');
 module.exports = {
 
 	entry: {
-		webmetry: './src/index.js'
+		webmetry: './index.js'
 	},
 
 	output: {
@@ -73,7 +73,7 @@ module.exports = {
 	plugins: [
 		new CleanWebpackPlugin([ resolve('dist') ]),
 		new webpack.BannerPlugin({
-			banner: `[name]@${package.version}\nhash:[hash]`
+			banner: `[name]@${pkg.version}\nhash:[hash]`
 		})
 	],
 
