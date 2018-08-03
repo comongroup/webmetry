@@ -3,7 +3,7 @@ function Webmetry(conf) {
 	self.currentLine = null;
 	self.currentConfig = {};
 	var overlay = null;
-	
+
 	var config = [
 		{
 			until:99999,
@@ -54,14 +54,14 @@ function Webmetry(conf) {
 			}
 		}
 	];
-	
+
 	function overrideConfig(override) {
 		config = override;
 	}
-	
+
 	if(conf)
 		overrideConfig(conf);
-	
+
 	function renderGrid() {
 		overlay = document.createElement("DIV");
 		var grid = document.createElement("DIV");
@@ -77,61 +77,62 @@ function Webmetry(conf) {
 		gs.display = "flex";
 		gs.position = "fixed";
 		gs.top = 0;gs.left = 0;gs.bottom = 0;gs.right = 0;
-		
+
 		var w = window.innerWidth;
-		var h = window.innerHeight;
+		// var h = window.innerHeight;
 		for(var c=0;c<config.length;c++){
 			self.currentConfig = config[c];
 			if(w < self.currentConfig.until)
-				break;				
+				break;
 		}
 		var p = self.currentConfig.params;
 
 		gs.margin = p.margin;
-		
+
 		var createGutter = function(width) {
 			var gutter = document.createElement("DIV");
 			var gts = gutter.style;
-			
+
 			gts.flexGrow = 0;
 			gts.flexShrink = 0;
 			gts.backgroundColor = p.styles.gutter.hex;
 			gts.opacity = p.styles.gutter.opacity;
 			gts.width = width;
-			
+
 			return gutter;
-		}
-		
-		for(var c=1;c<=p.columns;c++) {
-			
+		};
+
+		for(c=1;c<=p.columns;c++) {
+
 			if(p.edgeGutters){
 				if(c==1)
 					grid.appendChild(createGutter(p.edgeGutters));
 			}
-			
+
 			var column = document.createElement("DIV");
 			var cs = column.style;
-			
+
 			cs.flexGrow = 1;
 			cs.backgroundColor = p.styles.column.hex;
 			cs.opacity = p.styles.column.opacity;
-			
+
 			grid.appendChild(column);
 
 			if(c==p.columns){
 				if(p.edgeGutters){
 					grid.appendChild(createGutter(p.edgeGutters));
 				}
-			}else{
+			}
+			else{
 				grid.appendChild(createGutter(p.gutters));
 			}
-				
+
 		}
-		
+
 		overlay.appendChild(grid);
 		document.body.appendChild(overlay);
 	}
-	
+
 	self.addLine = function(vertical) {
 		if(!vertical)
 			vertical = false;
@@ -140,23 +141,24 @@ function Webmetry(conf) {
 		var h = window.innerHeight;
 		var baseHangLine = document.createElement("DIV");
 		var bhls = baseHangLine.style;
-		baseHangLine.classList.add(vertical ? "webmetry_vline" : "webmetry_hline");		
+		baseHangLine.classList.add(vertical ? "webmetry_vline" : "webmetry_hline");
 		bhls.position = "fixed";
 		if(vertical){
 			bhls.top = 0;bhls.left = (w/2)+"px";bhls.bottom = 0;
 			bhls.width = p.styles.baseHangLine.thickness;
-		}else{
+		}
+		else{
 			bhls.left = 0;bhls.top = (h/2)+"px";bhls.right = 0;
 			bhls.height = p.styles.baseHangLine.thickness;
 		}
 		bhls.backgroundColor = p.styles.baseHangLine.hex;
 		bhls.opacity = p.styles.baseHangLine.opacity;
 		bhls.pointerEvents = "all";
-		
+
 		baseHangLine.onmousedown = function(){
 			self.currentLine = this;
-		}
-		
+		};
+
 		document.onmousemove = function(e) {
 			if(self.currentLine){
 				e = e || window.event;
@@ -165,19 +167,19 @@ function Webmetry(conf) {
 				if(vertical)
 					self.currentLine.style.left = (e.clientX - half) + "px";
 				else
-					self.currentLine.style.top = (e.clientY - half) + "px";				
+					self.currentLine.style.top = (e.clientY - half) + "px";
 				self.currentLine.dataset.upperValue = (vertical ? e.clientX : e.clientY) - half;
 				self.currentLine.dataset.lowerValue = (vertical ? e.clientX : e.clientY) + half;
 			}
-		}
-		
+		};
+
 		document.onmouseup = function() {
 			self.currentLine = null;
-		}
-		
+		};
+
 		overlay.appendChild(baseHangLine);
-	}
-	
+	};
+
 	function init() {
 		document.onkeydown = function(e) {
 			var evtobj = window.event ? event : e;
@@ -186,18 +188,18 @@ function Webmetry(conf) {
 					case 86:
 						self.addLine(true);
 						break;
-						
+
 					case 71:
 						if(overlay.style.visibility == "collapse")
 							overlay.style.visibility = "visible";
 						else
 							overlay.style.visibility = "collapse";
 						break;
-						
+
 					case 72:
 						self.addLine(false);
 						break;
-					
+
 					case 67:
 						if(self.currentLine){
 							self.currentLine.parentElement.removeChild(self.currentLine);
@@ -205,9 +207,9 @@ function Webmetry(conf) {
 						}
 						break;
 				}
-				
+
 			}
-		}
+		};
 		config.sort(function(a,b){
 			if (a.until < b.until)
 				return -1;
@@ -221,7 +223,7 @@ function Webmetry(conf) {
 		document.body.appendChild(ils);
 		renderGrid();
 	}
-	
+
 	init();
 }
 window.webmetry = new Webmetry(window.webmetry);

@@ -1,0 +1,54 @@
+{
+	"name": "webmetry",
+	"version": "0.0.1",
+	"description": "Webmetry design support tool",
+	"license": "ISC",
+	"author": "comOn <webdev@comon.pt>",
+	"contributors": [
+		"Sérgio Ribeiro <sergio.ribeiro@comon.pt>",
+		"Luís Soares <luis.soares@comon.pt>"
+	],
+	"homepage": "https://github.com/comongroup/webmetry#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/comongroup/webmetry.git"
+	},
+	"bugs": {
+		"url": "https://github.com/comongroup/webmetry/issues"
+	},
+	"main": "webmetry.js",
+	"scripts": {
+		"build": "webpack --config ./webpack.prod.js",
+		"lint": "eslint --ext .js src",
+		"start": "webpack --config ./webpack.dev.js"
+	},
+	"browserslist": [
+		"> 1%",
+		"last 2 versions",
+		"not ie <= 8"
+	],
+	"dependencies": {
+		"lodash": "^4.17.10"
+	},
+	"devDependencies": {
+		"autoprefixer": "^9.1.0",
+		"babel-core": "^6.26.3",
+		"babel-eslint": "^8.2.6",
+		"babel-loader": "^7.1.5",
+		"babel-preset-env": "^1.7.0",
+		"babel-preset-stage-3": "^6.24.1",
+		"clean-webpack-plugin": "^0.1.19",
+		"css-loader": "^1.0.0",
+		"cssnano": "^4.0.5",
+		"eslint": "^5.2.0",
+		"eslint-loader": "^2.1.0",
+		"file-loader": "^1.1.11",
+		"html-loader": "^0.5.5",
+		"node-sass": "^4.9.2",
+		"postcss-loader": "^2.1.6",
+		"sass-loader": "^7.1.0",
+		"webpack": "^4.16.4",
+		"webpack-cli": "^3.1.0",
+		"webpack-merge": "^4.1.4"
+	}
+}
