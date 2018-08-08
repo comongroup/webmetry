@@ -10,6 +10,7 @@ export default function onChange(object, callback) {
 			if (changed) {
 				callback(key, value, oldValue);
 			}
+			return true;
 		},
 		deleteProperty(target, key) {
 			const oldValue = target[key];

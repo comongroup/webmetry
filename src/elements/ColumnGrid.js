@@ -1,6 +1,6 @@
-import WebmetryElement from '../base/WebmetryElement';
+import Component from '../base/Component';
 
-export default class ColumnGrid extends WebmetryElement {
+export default class ColumnGrid extends Component {
 	constructor(options) {
 		super(options, {
 			columnNumber: { type: Number, default: 12 },

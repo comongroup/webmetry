@@ -2,7 +2,7 @@ import { defaultsDeep, mapValues } from 'lodash';
 import Emitter from '../utils/emitter';
 import onChange from '../utils/onChange';
 
-export default class WebmetryElement extends Emitter {
+export default class Component extends Emitter {
 	constructor(options, props) {
 		super();
 
