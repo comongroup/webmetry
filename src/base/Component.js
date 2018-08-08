@@ -6,8 +6,8 @@ export default class Component extends Emitter {
 	constructor(options, props) {
 		super();
 
-		// props
-		props = defaultsDeep(props || {}, {});
+		// props (public so the editor can access them)
+		this.props = defaultsDeep(props || {}, {});
 
 		// state
 		const state = defaultsDeep(options || {}, mapValues(this.props, (o) => {
