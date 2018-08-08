@@ -8,4 +8,7 @@ export default class ColumnGrid extends Component {
 			gutterCompensation: { type: String, default: '10px' }
 		});
 	}
+	render() {
+		console.log('rendering stuff');
+	}
 }

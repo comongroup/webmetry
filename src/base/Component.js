@@ -1,26 +1,26 @@
 import { defaultsDeep, mapValues } from 'lodash';
-import Emitter from '../utils/emitter';
-import onChange from '../utils/onChange';
+import Emitter from '../utils/Emitter';
+import observeObject from '../utils/observeObject';
 
 export default class Component extends Emitter {
 	constructor(options, props) {
 		super();
 
-		// props and state
-		this.props = defaultsDeep(props || {}, {});
-		this.state = defaultsDeep(options || {}, mapValues(this.props, (o) => {
+		// props
+		props = defaultsDeep(props || {}, {});
+
+		// state
+		const state = defaultsDeep(options || {}, mapValues(this.props, (o) => {
 			return o.default || undefined;
 		}));
 
-		// set observers
-		this.state = onChange(this.state, (key, newValue, oldValue) => {
+		// observe state
+		this.state = observeObject(state, (key, newValue, oldValue) => {
 			this.emit('change:' + key, newValue, oldValue);
 			this.emit('change', key, newValue, oldValue);
 		});
 
-		// self element and parent
-		this.name = 'Element';
-		this.element = null;
-		this.parent = null;
+		// getters
+		this.getProps = () => props;
 	}
 }
