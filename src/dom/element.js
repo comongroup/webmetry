@@ -4,10 +4,11 @@ import { flattenDeep } from 'lodash';
 export const TEXT_ELEMENT = 'TEXT ELEMENT';
 
 /**
- * Creates a react-like DomSpec.
+ * Creates a react-like DomSpec of `{ type, props }`.
  * @param {String} type
  * @param {Object} config
  * @param {DomSpec[]} children
+ * @returns {DomSpec}
  */
 export function createElement(type, config, ...children) {
 	const props = Object.assign({}, config);
@@ -19,8 +20,9 @@ export function createElement(type, config, ...children) {
 }
 
 /**
- * Creates a react-like DomSpec.
+ * Creates a react-like DomSpec of `{ type, props }`.
  * @param {String} text
+ * @returns {DomSpec}
  */
 export function createTextElement(text) {
 	return createElement(TEXT_ELEMENT, { nodeValue: text });

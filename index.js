@@ -13,11 +13,11 @@ document.body.appendChild(wmElement);
 
 // create test grid
 const cgrid = new ColumnGrid();
-let cgridEl = null;
-let cgridRender = null;
+window.cgridDom = null;
+window.cgridEl = null;
 cgrid.on('change', (key, value, old) => {
 	console.log(`changed ${key} from ${old} to ${value}`);
-	cgridEl = reconcile(wmElement, cgridEl, cgridRender, cgridRender = cgrid.render());
+	window.cgridDom = reconcile(wmElement, window.cgridDom, window.cgridEl, window.cgridEl = cgrid.render());
 });
-cgridEl = reconcile(wmElement, cgridEl, cgridRender, cgridRender = cgrid.render());
+window.cgridDom = reconcile(wmElement, window.cgridDom, window.cgridEl, window.cgridEl = cgrid.render());
 console.log(window.cgrid = cgrid);

@@ -10,8 +10,10 @@ function getEventName(key) {
 }
 
 /**
- * Creates an HTMLElement based on a react-like DomSpec of `{ type, props }`.
+ * Creates a single HTMLElement based on a react-like DomSpec of `{ type, props }`.
+ * Doesn't include children in props.
  * @param {DomSpec} element
+ * @returns {HTMLElement}
  */
 export function createDomElement(element) {
 	const { type, props } = element;
@@ -24,15 +26,43 @@ export function createDomElement(element) {
 	// set props
 	updateDomProps(dom, [], props);
 
-	// add to parent and append
+	// return
+	return dom;
+}
+
+/**
+ * Creates an HTMLElement based on a react-like DomSpec of `{ type, props }`.
+ * Generates the full element, including children.
+ * @param {DomSpec} element
+ * @param {HTMLElement} parent The parent to append the new DOM element to.
+ * @returns {HTMLElement}
+ */
+export function createDomTree(element, parent) {
+	// create dom element with props
+	const dom = createDomElement(element);
+
+	// create children
+	if (element.props.children) {
+		element.props.children.forEach(child => {
+			createDomTree(child, dom);
+		});
+	}
+
+	// append if necessary
+	if (parent) {
+		parent.appendChild(dom);
+	}
+
+	// return
 	return dom;
 }
 
 /**
  * Updates an HTMLElement based on a react-like DomSpec of `{ type, props }`
  * with new properties, always checking if props need to be updated or not.
- * @param {DomSpec} element
- * @param {HTMLElement} parent
+ * @param {HTMLElement} dom
+ * @param {DomSpecProps} prevProps
+ * @param {DomSpecProps} nextProps
  */
 export function updateDomProps(dom, prevProps, nextProps) {
 	// cache predicates for filtering functions
@@ -65,7 +95,7 @@ export function updateDomProps(dom, prevProps, nextProps) {
 			dom[name] = null;
 		});
 
-	// add or set new attributes
+	// add or update new attributes
 	Object.keys(nextProps)
 		.filter(isAttribute)
 		.filter(isNewNow)
@@ -73,17 +103,21 @@ export function updateDomProps(dom, prevProps, nextProps) {
 			dom[name] = nextProps[name];
 		});
 
-	// set style
+	// get style objects
 	prevProps.style = prevProps.style || {};
 	nextProps.style = nextProps.style || {};
-	Object.keys(nextProps.style)
-		.filter(isNew(prevProps.style, nextProps.style))
-		.forEach(key => {
-			dom.style[key] = nextProps.style[key];
-		});
+
+	// remove old styles
 	Object.keys(prevProps.style)
 		.filter(isGone(nextProps.style))
 		.forEach(key => {
 			dom.style[key] = '';
+		});
+
+	// add or update new styles
+	Object.keys(nextProps.style)
+		.filter(isNew(prevProps.style, nextProps.style))
+		.forEach(key => {
+			dom.style[key] = nextProps.style[key];
 		});
 }
