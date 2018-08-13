@@ -31,30 +31,23 @@ export function createDomElement(element) {
 }
 
 /**
- * Creates an HTMLElement based on a react-like DomSpec of `{ type, props }`.
- * Generates the full element, including children.
+ * Creates a DomInstance of `{ element, dom, childInstances }` based on a react-like DomSpec of `{ type, props }`.
+ * Generates everything, including instances for all children, from scratch.
  * @param {DomSpec} element
- * @param {HTMLElement} parent The parent to append the new DOM element to.
- * @returns {HTMLElement}
+ * @returns {DomInstance}
  */
-export function createDomTree(element, parent) {
-	// create dom element with props
+export function createInstance(element) {
+	// create root element with props
 	const dom = createDomElement(element);
 
-	// create children
-	if (element.props.children) {
-		element.props.children.forEach(child => {
-			createDomTree(child, dom);
-		});
-	}
+	// create children instances
+	const childElements = element.props.children || [];
+	const childInstances = childElements.map(createInstance);
+	const childDoms = childInstances.map(instance => instance.dom);
+	childDoms.forEach(childDom => dom.appendChild(childDom));
 
-	// append if necessary
-	if (parent) {
-		parent.appendChild(dom);
-	}
-
-	// return
-	return dom;
+	// return instance
+	return { element, dom, childInstances };
 }
 
 /**
