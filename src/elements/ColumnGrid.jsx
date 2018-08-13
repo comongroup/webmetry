@@ -1,5 +1,4 @@
 import Component from '../base/Component';
-import { createElement } from '../dom/element';
 
 export default class ColumnGrid extends Component {
 	constructor(options) {
@@ -22,7 +21,7 @@ export default class ColumnGrid extends Component {
 		if (color != null) {
 			style.backgroundColor = color;
 		}
-		return createElement('div', { className, style });
+		return <div className={className} style={style}></div>;
 	}
 	render() {
 		const children = [];
@@ -36,12 +35,10 @@ export default class ColumnGrid extends Component {
 				? this.renderChild('wm-gutter -last', this.state.edgeGutterSize, this.state.edgeGutterColor)
 				: this.renderChild('wm-gutter', this.state.midGutterSize, this.state.midGutterColor));
 		}
-		return createElement('div', {
-			className: 'wm-column-grid',
-			style: {
-				margin: this.state.margin,
-				opacity: this.state.opacity
-			}
-		}, children);
+		const style = {
+			margin: this.state.margin,
+			opacity: this.state.opacity
+		};
+		return <div className="wm-column-grid" style={style}>{children}</div>;
 	}
 }

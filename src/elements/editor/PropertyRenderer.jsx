@@ -1,6 +1,5 @@
 import { camelCase } from 'lodash';
 import Component from '../../base/Component';
-import { createElement } from '../../dom/element';
 import renderPropEditor from '../../utils/renderProp';
 
 export default class PropertyRenderer extends Component {
@@ -19,7 +18,7 @@ export default class PropertyRenderer extends Component {
 				children.push(child);
 			});
 		}
-		return createElement('div', { className: 'wm-property-renderer' }, children);
+		return <div className="wm-property-renderer">{children}</div>;
 	}
 	mounted(dom) {
 		dom.addEventListener('change', (e) => {

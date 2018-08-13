@@ -1,7 +1,7 @@
 import { startCase } from 'lodash';
 import { createElement } from '../dom/element';
 
-export function renderPropInput(target, propKey, propObject, value) {
+export function renderPropEditorInput(target, propKey, propObject, value) {
 	const name = 'wmprop-' + propKey;
 	const props = { name, value };
 
@@ -20,19 +20,17 @@ export function renderPropInput(target, propKey, propObject, value) {
 		}
 	}
 	switch (propObject.type) {
-		case Number: return createElement('input', { type: 'number', ...props });
-		default: return createElement('input', { type: 'text', ...props });
+		case Number: return <input type="number" {...props} />;
+		default: return <input type="text" {...props} />;
 	}
 }
 
 export default function renderPropEditor(target, propKey, propObject, value) {
 	const name = startCase(propKey);
-	const input = renderPropInput(target, propKey, propObject, value);
+	const input = renderPropEditorInput(target, propKey, propObject, value);
 
-	return createElement('label', {
-		className: 'wm-property-field'
-	}, [
-		createElement('span', { className: 'prop-name', title: name }, name),
-		createElement('div', { className: 'prop-value' }, input)
-	]);
+	return <label className="wm-property-field">
+		<span className="prop-name" title={name}>{name}</span>
+		<div class="prop-value">{input}</div>
+	</label>;
 }

@@ -1,5 +1,5 @@
 import Emitter from '../utils/Emitter';
-import { reconcile } from '../dom/render';
+import { reconcile } from '../dom/reconcile';
 
 export default class ComponentHandler extends Emitter {
 	constructor(parent) {

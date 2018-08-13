@@ -32,7 +32,7 @@ module.exports = {
 			},
 
 			{
-				test: /\.js$/,
+				test: /\.jsx?$/,
 				exclude: /node_modules/,
 				use: 'babel-loader'
 			},
@@ -75,6 +75,9 @@ module.exports = {
 		new CleanWebpackPlugin([ resolve('dist') ]),
 		new webpack.BannerPlugin({
 			banner: `[name]@${pkg.version}\nhash:[hash]`
+		}),
+		new webpack.ProvidePlugin({
+			dom: resolve('src/dom/dom.js')
 		})
 	],
 
