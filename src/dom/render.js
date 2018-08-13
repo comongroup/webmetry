@@ -18,7 +18,7 @@ export function reconcile(parentDom, currentInstance, currentElement, nextElemen
 		// root element is different!
 		// need to recreate and replace
 		const nextInstance = createInstance(nextElement);
-		parentDom.replaceChild(currentInstance.dom, nextInstance.dom);
+		parentDom.replaceChild(nextInstance.dom, currentInstance.dom);
 		return nextInstance;
 	}
 	else {

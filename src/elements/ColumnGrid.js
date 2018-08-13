@@ -4,11 +4,11 @@ import { createElement } from '../dom/element';
 export default class ColumnGrid extends Component {
 	constructor(options) {
 		super(options, {
-			columnColor: { type: String, default: 'rgba(255, 0, 0)', picker: 'color' },
+			columnColor: { type: String, default: 'rgb(255, 0, 0)', picker: 'color' },
 			columnNumber: { type: Number, default: 12 },
-			edgeGutterColor: { type: String, default: 'rgba(51, 0, 255)', picker: 'color' },
+			edgeGutterColor: { type: String, default: 'rgb(51, 0, 255)', picker: 'color' },
 			edgeGutterSize: { type: String, default: '10px' },
-			midGutterColor: { type: String, default: 'rgba(51, 0, 255)', picker: 'color' },
+			midGutterColor: { type: String, default: 'rgb(51, 0, 255)', picker: 'color' },
 			midGutterSize: { type: String, default: '10px' },
 			margin: { type: String, default: '10px' },
 			opacity: { type: Number, default: 0.25, picker: 'slider', range: [0, 1] }
