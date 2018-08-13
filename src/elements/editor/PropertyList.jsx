@@ -1,8 +1,8 @@
 import { camelCase } from 'lodash';
 import Component from '../../base/Component';
-import renderPropEditor from '../../utils/renderProp';
+import renderPropEditor from '../../utils/editor/renderPropEditor';
 
-export default class PropertyRenderer extends Component {
+export default class PropertyList extends Component {
 	constructor(options) {
 		super(options, {});
 	}

@@ -77,7 +77,7 @@ module.exports = {
 			banner: `[name]@${pkg.version}\nhash:[hash]`
 		}),
 		new webpack.ProvidePlugin({
-			dom: resolve('src/dom/dom.js')
+			dom: resolve('src/dom.js')
 		})
 	],
 

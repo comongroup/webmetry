@@ -31,26 +31,6 @@ export function createDomElement(element) {
 }
 
 /**
- * Creates a DomInstance of `{ element, dom, childInstances }` based on a react-like DomSpec of `{ type, props }`.
- * Generates everything, including instances for all children, from scratch.
- * @param {DomSpec} element
- * @returns {DomInstance}
- */
-export function createInstance(element) {
-	// create root element with props
-	const dom = createDomElement(element);
-
-	// create children instances
-	const childElements = element.props.children || [];
-	const childInstances = childElements.map(createInstance);
-	const childDoms = childInstances.map(instance => instance.dom);
-	childDoms.forEach(childDom => dom.appendChild(childDom));
-
-	// return instance
-	return { element, dom, childInstances };
-}
-
-/**
  * Updates an HTMLElement based on a react-like DomSpec of `{ type, props }`
  * with new properties, always checking if props need to be updated or not.
  * @param {HTMLElement} dom
@@ -77,7 +57,7 @@ export function updateDomProps(dom, prevProps, nextProps) {
 		.filter(isNewNow)
 		.forEach(name => {
 			const eventType = getEventName(name);
-			dom.addEventListener(eventType, prevProps[name]);
+			dom.addEventListener(eventType, nextProps[name]);
 		});
 
 	// remove old unnecessary attributes

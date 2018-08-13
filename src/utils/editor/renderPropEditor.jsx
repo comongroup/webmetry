@@ -19,6 +19,8 @@ export function renderPropEditorInput(target, propKey, propObject, value) {
 				if (propObject.step) {
 					props.step = propObject.step;
 				}
+				delete props.value; // this is necessary cause of min and max order
+				props.value = value;
 				props.defaultValue = value;
 				return <input type="range" {...props} />;
 		}

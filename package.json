@@ -18,9 +18,9 @@
 	},
 	"main": "webmetry.js",
 	"scripts": {
-		"build": "webpack --progress --config ./webpack.prod.js",
+		"build": "webpack --config ./webpack.prod.js",
 		"lint": "eslint --ext .js src",
-		"start": "webpack --progress --config ./webpack.dev.js --watch"
+		"start": "webpack --config ./webpack.dev.js --watch"
 	},
 	"browserslist": [
 		"> 1%",

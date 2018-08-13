@@ -1,5 +1,5 @@
 import Emitter from '../utils/Emitter';
-import { reconcile } from '../dom/reconcile';
+import { reconcile } from '../dom';
 
 export default class ComponentHandler extends Emitter {
 	constructor(parent) {
@@ -43,11 +43,11 @@ export default class ComponentHandler extends Emitter {
 	render(component) {
 		if (component.instance) {
 			const prevInstance = component.instance;
-			const nextInstance = reconcile(this.parent, prevInstance, prevInstance.dom, component.render());
+			const nextInstance = reconcile(this.parent, prevInstance, component.render());
 			component.instance = nextInstance;
 		}
 		else {
-			const instance = reconcile(this.parent, null, null, component.render());
+			const instance = reconcile(this.parent, null, component.render());
 			component.instance = instance;
 		}
 	}
