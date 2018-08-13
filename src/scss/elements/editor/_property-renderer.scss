@@ -31,6 +31,18 @@ $property-field-padding: 2px 0px !default;
 				display: block;
 				width: 100%;
 			}
+
+			input {
+				background: rgba(0, 0, 0, 0.25);
+				border: none;
+				color: inherit;
+
+				&[type=text],
+				&[type=date],
+				&[type=number] {
+					padding: 5px;
+				}
+			}
 		}
 	}
 }

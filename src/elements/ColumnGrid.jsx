@@ -14,13 +14,10 @@ export default class ColumnGrid extends Component {
 		});
 	}
 	renderChild(className, width, color) {
-		let style = {};
-		if (width != null) {
-			style.width = width;
-		}
-		if (color != null) {
-			style.backgroundColor = color;
-		}
+		const style = {
+			width: width || undefined,
+			backgroundColor: color || undefined
+		};
 		return <div className={className} style={style}></div>;
 	}
 	render() {
