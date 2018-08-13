@@ -20,7 +20,9 @@ export default class ComponentHandler extends Emitter {
 			});
 
 			// render for the first time now
+			// and inform the component that it has been mounted
 			this.render(component);
+			component.mounted(component.instance.dom);
 
 			// emit event that we're successfully added
 			this.emit('add', component, length);
@@ -32,6 +34,7 @@ export default class ComponentHandler extends Emitter {
 			const deleted = this.components.splice(index, 1);
 			if (component.instance) {
 				this.parent.removeChild(component.instance.dom);
+				component.unmounted(component.instance.dom);
 				delete component.instance;
 			}
 			this.emit('remove', deleted, index);

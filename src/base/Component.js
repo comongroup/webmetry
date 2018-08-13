@@ -23,4 +23,7 @@ export default class Component extends Emitter {
 		// getters
 		this.getProps = () => props;
 	}
+	render() {}
+	mounted(dom) {}
+	unmounted(dom) {}
 }

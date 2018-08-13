@@ -1,5 +1,6 @@
-import ColumnGrid from './src/elements/ColumnGrid';
 import ComponentHandler from './src/base/ComponentHandler';
+import ColumnGrid from './src/elements/ColumnGrid';
+import PropertyRenderer from './src/elements/editor/PropertyRenderer';
 import './src/scss/main.scss';
 
 // create element for all webmetry components
@@ -9,5 +10,9 @@ document.body.appendChild(wmElement);
 
 const handler = new ComponentHandler(wmElement);
 const grid = new ColumnGrid();
+const props = new PropertyRenderer();
+
+props.setTarget(grid);
 
 handler.add(grid);
+handler.add(props);
