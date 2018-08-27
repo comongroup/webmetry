@@ -13,13 +13,6 @@ export default class ColumnGrid extends Component {
 			opacity: { type: Number, default: 0.25, picker: 'slider', range: [0, 1], step: 0.05 }
 		});
 	}
-	renderChild(className, width, color) {
-		const style = {
-			width: width || undefined,
-			backgroundColor: color || undefined
-		};
-		return <div className={className} style={style}></div>;
-	}
 	render() {
 		const children = [];
 		const total = this.state.columnNumber;
@@ -37,5 +30,12 @@ export default class ColumnGrid extends Component {
 			opacity: this.state.opacity
 		};
 		return <div className="wm-column-grid" style={style}>{children}</div>;
+	}
+	renderChild(className, width, color) {
+		const style = {
+			width: width || undefined,
+			backgroundColor: color || undefined
+		};
+		return <div className={className} style={style}></div>;
 	}
 }
