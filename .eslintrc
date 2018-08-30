@@ -16,6 +16,7 @@
 		"sourceType": "module"
 	},
 	"rules": {
+		"arrow-parens": ["error", "as-needed"],
 		"brace-style": ["error", "stroustrup"],
 		"indent": ["error", "tab", { "SwitchCase": 1 }],
 		"no-console": "off",

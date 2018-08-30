@@ -10,7 +10,7 @@ export default class Component extends Emitter {
 		this.props = defaultsDeep(props || {}, {});
 
 		// state
-		const state = defaultsDeep(options || {}, mapValues(this.props, (o) => {
+		const state = defaultsDeep(options || {}, mapValues(this.props, o => {
 			return o.default || undefined;
 		}));
 

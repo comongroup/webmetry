@@ -21,7 +21,7 @@ export default class PropertyList extends Component {
 		return <div className="wm-property-renderer">{children}</div>;
 	}
 	mounted(dom) {
-		dom.addEventListener('change', (e) => {
+		dom.addEventListener('change', e => {
 			const name = (e.target.name || '').replace('wmprop-', '');
 			const value = (e.target.value || '').trim();
 			if (this.state.target && name in this.state.target.props) {

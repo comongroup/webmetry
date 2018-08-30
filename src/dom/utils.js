@@ -3,7 +3,7 @@ import { TEXT_ELEMENT } from './element';
 const isEvent = name => name.startsWith('on');
 const isAttribute = name => !isEvent(name) && name !== 'children' && name !== 'style';
 const isNew = (prev, next) => key => prev[key] !== next[key];
-const isGone = (next) => key => !(key in next);
+const isGone = next => key => !(key in next);
 
 function getEventName(key) {
 	return key.toLowerCase().substring(2);
