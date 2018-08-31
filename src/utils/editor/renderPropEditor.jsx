@@ -34,10 +34,11 @@ export function renderPropEditorInput(target, propKey, propObject, value) {
 
 export default function renderPropEditor(target, propKey, propObject, value) {
 	const name = startCase(propKey);
+	const title = propObject.title || name;
 	const input = renderPropEditorInput(target, propKey, propObject, value);
 
 	return <label className="wm-property-field">
-		<span className="prop-name" title={name}>{name}</span>
+		<span className="prop-name" title={title}>{name}</span>
 		<div className="prop-value">{input}</div>
 	</label>;
 }

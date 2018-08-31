@@ -11,7 +11,7 @@ export default class ColumnGrid extends Component {
 			midGutterSize: { type: String, default: '10px' },
 			margin: { type: String, default: '10px' },
 			opacity: { type: Number, default: 0.25, picker: 'slider', range: [0, 1], step: 0.05 }
-		});
+		}, 'ColumnGrid');
 	}
 	render() {
 		const children = [];

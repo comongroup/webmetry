@@ -18,9 +18,13 @@ export default class PropertyList extends Component {
 				children.push(child);
 			});
 		}
-		return <div className="wm-property-list">
-			<div className="wm-property-list-title">{target.constructor.name}</div>
-			<div className="wm-property-renderer">{children}</div>
+		return <div className={`wm-property-list${this.state.hidden ? ' -wm-hidden' : ''}`}>
+			<div className="wm-property-list-header -wm-flex" onClick={e => this.toggleHiddenState(e)}>
+				<span className="-wmfl-option -wm-collapse" title="Toggle list visibility">{this.state.hidden ? '▼' : '▲'}</span>
+				<span className="-wmfl-title">{target.name}</span>
+				<span className="-wmfl-option -wmfl-on-hover -wm-delete" title="Delete component" onClick={e => this.deleteTarget(e)}>❌</span>
+			</div>
+			<div className="wm-property-list-props">{children}</div>
 		</div>;
 	}
 	mounted(dom) {
@@ -37,5 +41,13 @@ export default class PropertyList extends Component {
 		const prop = target.props[key];
 		const convertedValue = prop.type(value);
 		target.state[key] = convertedValue;
+		this.emit('input', target, prop, convertedValue);
+	}
+	toggleHiddenState(e) {
+		this.state.hidden = !this.state.hidden;
+	}
+	deleteTarget(e) {
+		e.stopPropagation();
+		this.emit('trash');
 	}
 }

@@ -1,0 +1,14 @@
+.wm-inspector {
+	background: #222;
+	position: fixed;
+	width: 300px;
+	z-index: 999999999;
+
+	.wm-inspector-inside {
+		max-height: calc(100vh - 32px);
+		overflow: auto;
+	}
+
+	@import 'inspector-header';
+	@import 'property-list';
+}

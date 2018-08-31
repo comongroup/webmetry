@@ -3,10 +3,11 @@ import Emitter from '../utils/Emitter';
 import observeObject from '../utils/observeObject';
 
 export default class Component extends Emitter {
-	constructor(options, props) {
+	constructor(options, props, name) {
 		super();
 
 		// props (public so the editor can access them)
+		this.name = name || this.constructor.name;
 		this.props = defaultsDeep(props || {}, {});
 
 		// state
