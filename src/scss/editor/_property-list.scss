@@ -1,26 +1,21 @@
 .wm-property-list {
-	color: #fff;
 	display: block;
 	position: relative;
 
 	> .wm-property-list-header {
-		background: #111;
+		background: transparentize(black, 0.75);
 		cursor: pointer;
 		font-weight: bold;
-		padding: 3px 5px;
+		padding: 2px 5px;
 		user-select: none;
 
 		&:hover {
-			background: #000;
-
-			> span.-wmfl-option-show-on-hover {
-				display: block;
-			}
+			background: transparentize(black, 0.5);
 		}
 	}
 
 	> .wm-property-list-props {
-		padding: 5px 10px;
+		padding: 5px 15px;
 
 		> .wm-property-field {
 			display: flex;

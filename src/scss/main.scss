@@ -1,4 +1,5 @@
 .wm {
+	color: #fff;
 	font-family: 'Courier New', Courier, monospace;
 	font-size: 12px;
 	font-weight: normal;
@@ -36,6 +37,7 @@
 
 			&.-wmfl-title {
 				margin-right: auto;
+				padding: 10px 5px;
 				pointer-events: none;
 
 				&:first-child {

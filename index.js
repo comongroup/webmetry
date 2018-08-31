@@ -10,8 +10,7 @@ document.body.appendChild(wmElement);
 
 // configure main component handler, and inspector
 const handler = new ComponentHandler(wmElement);
-const inspector = new ComponentInspector(wmElement, handler);
-window.webmetryInstance = { handler, inspector };
-
-// TEMPORARY: add a new grid
-handler.add(new ColumnGrid());
+const inspector = new ComponentInspector(wmElement, handler, [
+	{ title: '📱 ColumnGrid', c: ColumnGrid }
+]);
+window.wmInstance = { handler, inspector };

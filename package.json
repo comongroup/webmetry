@@ -25,7 +25,7 @@
 	"browserslist": [
 		"> 1%",
 		"last 2 versions",
-		"not ie <= 8"
+		"not ie <= 10"
 	],
 	"dependencies": {
 		"lodash": "^4.17.10"

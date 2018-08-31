@@ -4,7 +4,10 @@ import renderPropEditor from '../../utils/editor/renderPropEditor';
 
 export default class PropertyList extends Component {
 	constructor(options) {
-		super(options, {});
+		super(options, {
+			hidden: { type: Boolean, default: true },
+			target: { type: Component }
+		});
 	}
 	render() {
 		const children = [];
@@ -20,9 +23,9 @@ export default class PropertyList extends Component {
 		}
 		return <div className={`wm-property-list${this.state.hidden ? ' -wm-hidden' : ''}`}>
 			<div className="wm-property-list-header -wm-flex" onClick={e => this.toggleHiddenState(e)}>
-				<span className="-wmfl-option -wm-collapse" title="Toggle list visibility">{this.state.hidden ? '▼' : '▲'}</span>
+				<span className="-wmfl-option" title={this.state.hidden ? 'Expand properties' : 'Hide properties'}>{this.state.hidden ? '▼' : '▲'}</span>
 				<span className="-wmfl-title">{target.name}</span>
-				<span className="-wmfl-option -wmfl-on-hover -wm-delete" title="Delete component" onClick={e => this.deleteTarget(e)}>❌</span>
+				<span className="-wmfl-option -wmfl-on-hover" title="Delete component" onClick={e => this.deleteTarget(e)}>🗑️</span>
 			</div>
 			<div className="wm-property-list-props">{children}</div>
 		</div>;
