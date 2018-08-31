@@ -1,0 +1,58 @@
+.wm {
+	color: #fff;
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 1;
+	position: static;
+
+	* {
+		box-sizing: border-box;
+	}
+
+	input, select, textarea {
+		display: block;
+		font-family: inherit;
+		font-size: inherit;
+		margin: 0;
+		padding: 0;
+	}
+
+	.-wm-flex {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+
+		> span[class^="-wmfl"] {
+			display: block;
+
+			&.-wmfl-option {
+				cursor: pointer;
+				padding: 10px 5px;
+
+				&:hover {
+					color: transparentize(#fff, 0.5);
+				}
+			}
+
+			&.-wmfl-title {
+				margin-right: auto;
+				padding: 10px 5px;
+				pointer-events: none;
+
+				&:first-child {
+					padding-left: 5px;
+				}
+			}
+		}
+
+		&:not(:hover) {
+			.-wmfl-on-hover {
+				display: none;
+			}
+		}
+	}
+
+	@import 'editor/inspector';
+	@import 'elements/column-grid';
+}

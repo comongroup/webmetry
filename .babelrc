@@ -6,6 +6,12 @@
 			]
 		}
 	},
+	"plugins": [
+		"lodash",
+		["transform-react-jsx", {
+			"pragma": "dom.createElement"
+		}]
+	],
 	"presets": [
 		"env",
 		"stage-3"

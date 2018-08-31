@@ -1,0 +1,29 @@
+.wm-column-grid {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	top: 0;
+
+	// interaction properties
+	pointer-events: none;
+
+	// flex properties
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	> .wm-column,
+	> .wm-gutter {
+		height: 100%;
+	}
+
+	.wm-column {
+		flex-grow: 1;
+	}
+
+	.wm-gutter {
+		flex-grow: 0;
+		flex-shrink: 0;
+	}
+}

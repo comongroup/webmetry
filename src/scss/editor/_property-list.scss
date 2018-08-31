@@ -1,0 +1,65 @@
+.wm-property-list {
+	display: block;
+	position: relative;
+
+	> .wm-property-list-header {
+		background: transparentize(black, 0.75);
+		cursor: pointer;
+		font-weight: bold;
+		padding: 2px 5px;
+		user-select: none;
+
+		&:hover {
+			background: transparentize(black, 0.5);
+		}
+	}
+
+	> .wm-property-list-props {
+		padding: 5px 15px;
+
+		> .wm-property-field {
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			padding: 2px 0px;
+
+			> .prop-name {
+				position: relative;
+				display: block;
+				overflow: hidden;
+				user-select: none;
+				width: 40%;
+				white-space: nowrap;
+			}
+
+			> .prop-value {
+				position: relative;
+				display: block;
+				flex-grow: 1;
+
+				input, select, textarea {
+					display: block;
+					width: 100%;
+				}
+
+				input {
+					background: rgba(0, 0, 0, 0.25);
+					border: none;
+					color: inherit;
+
+					&[type=text],
+					&[type=date],
+					&[type=number] {
+						padding: 5px;
+					}
+				}
+			}
+		}
+	}
+
+	&.-wm-hidden {
+		> .wm-property-list-props {
+			display: none;
+		}
+	}
+}

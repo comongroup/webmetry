@@ -1,5 +1,5 @@
 const path = require('path');
-const package = require('./package.json');
+const pkg = require('./package.json');
 const webpack = require('webpack');
 
 const resolve = function(dir) {
@@ -14,7 +14,7 @@ const cssnano = require('cssnano');
 module.exports = {
 
 	entry: {
-		webmetry: './src/index.js'
+		webmetry: './index.js'
 	},
 
 	output: {
@@ -26,13 +26,13 @@ module.exports = {
 		rules: [
 
 			{
-				test: /\.(js|vue)$/,
+				test: /\.(js)$/,
 				use: 'eslint-loader',
 				enforce: 'pre'
 			},
 
 			{
-				test: /\.js$/,
+				test: /\.jsx?$/,
 				exclude: /node_modules/,
 				use: 'babel-loader'
 			},
@@ -40,11 +40,11 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				use: [
-					{ loader: 'css-loader', options: { sourceMap: true } },
+					{ loader: 'style-loader' },
+					{ loader: 'css-loader' },
 					{
 						loader: 'postcss-loader',
 						options: {
-							sourceMap: true,
 							ident: 'postcss',
 							plugins: () => [
 								autoprefixer(),
@@ -52,7 +52,7 @@ module.exports = {
 							]
 						}
 					},
-					{ loader: 'sass-loader', options: { sourceMap: true } }
+					{ loader: 'sass-loader' }
 				]
 			},
 
@@ -73,7 +73,10 @@ module.exports = {
 	plugins: [
 		new CleanWebpackPlugin([ resolve('dist') ]),
 		new webpack.BannerPlugin({
-			banner: `[name]@${package.version}\nhash:[hash]`
+			banner: `[name]@${pkg.version}\nhash:[hash]`
+		}),
+		new webpack.ProvidePlugin({
+			dom: resolve('src/dom.js')
 		})
 	],
 
