@@ -18,7 +18,10 @@ export default class PropertyList extends Component {
 				children.push(child);
 			});
 		}
-		return <div className="wm-property-renderer">{children}</div>;
+		return <div className="wm-property-list">
+			<div className="wm-property-list-title">{target.constructor.name}</div>
+			<div className="wm-property-renderer">{children}</div>
+		</div>;
 	}
 	mounted(dom) {
 		dom.addEventListener('change', e => {
@@ -34,8 +37,5 @@ export default class PropertyList extends Component {
 		const prop = target.props[key];
 		const convertedValue = prop.type(value);
 		target.state[key] = convertedValue;
-	}
-	setTarget(target) {
-		this.state.target = target;
 	}
 }

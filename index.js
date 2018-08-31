@@ -12,7 +12,7 @@ const handler = new ComponentHandler(wmElement);
 const grid = new ColumnGrid();
 const props = new PropertyList();
 
-props.setTarget(grid);
+props.state.target = grid;
 
 handler.add(grid);
 handler.add(props);
