@@ -1,4 +1,10 @@
+body {
+	min-height: 100%;
+}
+
 .wm {
+	@import 'config/vars';
+
 	color: #fff;
 	font-family: 'Courier New', Courier, monospace;
 	font-size: 12px;

@@ -27,6 +27,7 @@ export default class ComponentHandler extends Emitter {
 			// emit event that we're successfully added
 			this.emit('add', component, length);
 		}
+		return component;
 	}
 	remove(component) {
 		const index = this.components.indexOf(component);
@@ -39,6 +40,7 @@ export default class ComponentHandler extends Emitter {
 			}
 			this.emit('remove', deleted, index);
 		}
+		return component;
 	}
 	render(component) {
 		if (component.instance) {
@@ -50,5 +52,6 @@ export default class ComponentHandler extends Emitter {
 			const instance = reconcile(this.parent, null, component.render());
 			component.instance = instance;
 		}
+		return component;
 	}
 }
