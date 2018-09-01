@@ -1,9 +1,11 @@
 import Component from '../base/Component';
+import renderIcon from '../utils/editor/renderIcon';
 
 export default class ColumnGrid extends Component {
 	constructor(options) {
 		super(options, {
-			columnColor: { type: String, default: '#000080', picker: 'color' },
+			columnColorEven: { type: String, default: '#000088', picker: 'color' },
+			columnColorOdd: { type: String, default: '#000080', picker: 'color' },
 			columnNumber: { type: Number, default: 12 },
 			edgeGutterColor: { type: String, default: '#3300ff', picker: 'color' },
 			edgeGutterSize: { type: String, default: '10px' },
@@ -11,7 +13,7 @@ export default class ColumnGrid extends Component {
 			midGutterSize: { type: String, default: '10px' },
 			margin: { type: String, default: '10px' },
 			opacity: { type: Number, default: 0.25, picker: 'slider', range: [0, 1], step: 0.05 }
-		}, '📱 ColumnGrid');
+		}, renderIcon('view_column', 'ColumnGrid'));
 	}
 	render() {
 		const children = [];
@@ -20,7 +22,9 @@ export default class ColumnGrid extends Component {
 			if (i === 0) {
 				children.push(this.renderChild('wm-gutter -first', this.state.edgeGutterSize, this.state.edgeGutterColor));
 			}
-			children.push(this.renderChild('wm-column', null, this.state.columnColor));
+			children.push(this.renderChild('wm-column', null, (i + 1) % 2 === 0
+				? this.state.columnColorEven
+				: this.state.columnColorOdd));
 			children.push(i === total - 1
 				? this.renderChild('wm-gutter -last', this.state.edgeGutterSize, this.state.edgeGutterColor)
 				: this.renderChild('wm-gutter', this.state.midGutterSize, this.state.midGutterColor));

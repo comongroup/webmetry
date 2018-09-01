@@ -1,3 +1,4 @@
+import renderIcon from './src/utils/editor/renderIcon';
 import ComponentHandler from './src/base/ComponentHandler';
 import ComponentInspector from './src/base/ComponentInspector';
 import ColumnGrid from './src/elements/ColumnGrid';
@@ -11,6 +12,6 @@ document.body.appendChild(wmElement);
 // configure main component handler, and inspector
 const handler = new ComponentHandler(wmElement);
 const inspector = new ComponentInspector(wmElement, handler, [
-	{ title: '📱 ColumnGrid', c: ColumnGrid }
+	{ title: renderIcon('view_column', 'ColumnGrid'), c: ColumnGrid }
 ]);
 window.wmInstance = { handler, inspector };

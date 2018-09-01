@@ -10,6 +10,32 @@
 		box-sizing: border-box;
 	}
 
+	@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+	.material-icons {
+		display: block;
+		font-size: 24px;
+		line-height: 6px; // why? I don't know. but it looks best in chrome that way
+		vertical-align: middle;
+	}
+
+	.wm-icon {
+		display: flex;
+		align-items: center;
+
+		> span {
+			display: block;
+
+			&.material-icons {
+				padding-right: 5px;
+			}
+
+			&.-wmi-text {
+				padding-top: 1px;
+			}
+		}
+	}
+
 	input, select, textarea {
 		display: block;
 		font-family: inherit;
@@ -27,11 +53,12 @@
 			display: block;
 
 			&.-wmfl-option {
+				color: transparentize(#fff, 0.5);
 				cursor: pointer;
 				padding: 10px 5px;
 
 				&:hover {
-					color: transparentize(#fff, 0.5);
+					color: #fff;
 				}
 			}
 
