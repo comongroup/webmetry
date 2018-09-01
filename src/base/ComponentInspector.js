@@ -15,7 +15,9 @@ export default class ComponentInspector extends ComponentHandler {
 		this.container.className = 'wm-inspector';
 
 		// add inspector header
-		this.header = new InspectorHeader();
+		this.header = new InspectorHeader({
+			title: 'Webmetry'
+		});
 		this.header.on('select', () => {
 			this.selector.show();
 			this.moveContainerWithinBounds();
