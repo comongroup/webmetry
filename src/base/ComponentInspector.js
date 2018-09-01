@@ -2,6 +2,7 @@ import ComponentHandler from './ComponentHandler';
 import PropertyList from '../elements/editor/PropertyList';
 import InspectorHeader from '../elements/editor/InspectorHeader';
 import InspectorDialogSelector from '../elements/editor/InspectorDialogSelector';
+import outsideElementCallback from '../utils/outsideElementCallback';
 
 export default class ComponentInspector extends ComponentHandler {
 	constructor(parent, handler, components) {
@@ -15,9 +16,9 @@ export default class ComponentInspector extends ComponentHandler {
 		this.container.className = 'wm-inspector';
 
 		// add inspector header
-		this.header = new InspectorHeader({
+		this.header = this.add(new InspectorHeader({
 			title: 'Webmetry'
-		});
+		}));
 		this.header.on('select', () => {
 			this.selector.show();
 			this.moveContainerWithinBounds();
@@ -28,18 +29,29 @@ export default class ComponentInspector extends ComponentHandler {
 		this.header.on('dragstop', () => {
 			this.moveContainerWithinBounds();
 		});
-		this.add(this.header);
 
 		// add inspector dialog selector
-		this.selector = new InspectorDialogSelector({
+		this.selector = this.add(new InspectorDialogSelector({
 			components: components || [],
 			title: 'Add component'
-		});
+		}));
 		this.selector.on('select', component => {
 			this.handler.add(new component()); // eslint-disable-line new-cap
 			this.selector.hide();
 		});
-		this.add(this.selector);
+		this.selector.on('change:showing', showing => {
+			if (showing) {
+				setTimeout(() => {
+					document.addEventListener('click', this.hideSelector);
+				}, 1);
+			}
+			else {
+				document.removeEventListener('click', this.hideSelector);
+			}
+		});
+		this.hideSelector = outsideElementCallback(this.selector.instance.dom, () => {
+			this.selector.hide();
+		});
 
 		// handle the handler's events
 		this.handler = handler;
@@ -84,8 +96,9 @@ export default class ComponentInspector extends ComponentHandler {
 	}
 	moveContainerWithinBounds() {
 		setTimeout(() => {
-			const maxLeft = window.innerWidth - this.container.clientWidth;
-			const maxTop = window.innerHeight - this.container.clientHeight;
+			const docEl = (document.documentElement || document.body);
+			const maxLeft = docEl.clientWidth - this.container.clientWidth;
+			const maxTop = docEl.clientHeight - this.container.clientHeight;
 			const currentLeft = parseInt(this.container.style.left || 0, 10);
 			const currentTop = parseInt(this.container.style.top || 0, 10);
 			this.container.style.left = Math.max(0, Math.min(maxLeft, currentLeft)) + 'px';
@@ -93,8 +106,9 @@ export default class ComponentInspector extends ComponentHandler {
 		}, 1);
 	}
 	snapContainerToBottom() {
-		// TODO: actually make this work
-		const maxTop = window.innerHeight - this.container.clientHeight;
+		// TODO: actually call this method
+		const docEl = (document.documentElement || document.body);
+		const maxTop = docEl.clientHeight - this.container.clientHeight;
 		this.container.style.top = maxTop + 'px';
 	}
 }

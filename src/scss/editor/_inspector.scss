@@ -1,9 +1,15 @@
 .wm-inspector {
 	background: transparentize(#222, 0.1);
 	box-shadow: 0 0 10px transparentize(#000, 0.5);
+	opacity: 0.675;
 	position: fixed;
+	transition: opacity ease 0.2s;
 	width: 300px;
-	z-index: 999999999;
+	z-index: $z-index-inspector;
+
+	&:hover {
+		opacity: 1;
+	}
 
 	.wm-inspector-inside {
 		max-height: calc(100vh - 42px);
