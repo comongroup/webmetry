@@ -1,11 +1,21 @@
-import { startCase } from 'lodash';
+import { map, startCase } from 'lodash';
 
-export function renderPropEditorInput(target, propKey, propObject, value) {
+export function renderPropEditorInput(target, propKey, propObject, value, isRecursive) {
 	const name = 'wmprop-' + propKey;
-	const props = { name, value };
+	const props = {
+		name,
+		value,
+		placeholder: propObject.placeholder
+	};
 
 	if (typeof propObject.render === 'function') {
 		return propObject.render(propKey, propObject, value);
+	}
+
+	if (propObject.children && !isRecursive) {
+		return map(propObject.children, childKey => {
+			return renderPropEditorInput(target, childKey, target.props[childKey], target.state[childKey], true);
+		});
 	}
 
 	if (propObject.picker) {

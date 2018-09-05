@@ -11,9 +11,7 @@ export default class Component extends Emitter {
 		this.props = defaultsDeep(props || {}, {});
 
 		// state
-		const state = defaultsDeep(options || {}, mapValues(this.props, o => {
-			return o.default || undefined;
-		}));
+		const state = defaultsDeep(options || {}, mapValues(this.props, o => o.default || undefined));
 
 		// observe state
 		this.state = observeObject(state, (key, newValue, oldValue) => {

@@ -3,12 +3,16 @@ import Component from '../../base/Component';
 export default class InspectorHeader extends Component {
 	constructor(options) {
 		super(options, {
-			title: { type: String, default: 'Header title' }
+			title: { type: String, default: 'Header title' },
+			subtitle: { type: String }
 		});
 	}
 	render() {
 		return <div className="wm-inspector-header -wm-flex">
-			<span className="-wmfl-title">{this.state.title}</span>
+			<span className="-wmfl-title">
+				{this.state.title}
+			</span>
+			{this.state.subtitle ? <span className="-wmfl-label">{this.state.subtitle}</span> : null}
 			<span className="-wmfl-option" title="Add component..." onClick={() => this.emit('select')}>
 				<i className="material-icons">add</i>
 			</span>

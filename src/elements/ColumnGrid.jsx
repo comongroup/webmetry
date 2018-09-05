@@ -1,5 +1,6 @@
 import Component from '../base/Component';
 import renderIcon from '../utils/editor/renderIcon';
+import { responsiveProps } from '../utils/editor/responsiveUtils';
 
 export default class ColumnGrid extends Component {
 	constructor(options) {
@@ -14,7 +15,8 @@ export default class ColumnGrid extends Component {
 			edgeGutterColor: { type: String, default: '#3300ff', picker: 'color' },
 			edgeGutterSize: { type: String, default: '10px' },
 			midGutterColor: { type: String, default: '#3300ff', picker: 'color' },
-			midGutterSize: { type: String, default: '10px' }
+			midGutterSize: { type: String, default: '10px' },
+			...responsiveProps()
 		}, renderIcon('view_column', 'ColumnGrid'));
 	}
 	render() {

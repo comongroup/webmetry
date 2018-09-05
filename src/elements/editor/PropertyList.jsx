@@ -19,12 +19,14 @@ export default class PropertyList extends Component {
 		else {
 			Object.keys(target.props).forEach(key => {
 				const prop = target.props[key];
-				if (prop.hideInInspector !== true) {
+				if (prop.hidden !== true) {
 					if (prop.header) {
 						children.push(<div className="wm-property-field-header">{prop.header}</div>);
 					}
-					const child = renderPropEditor(target, camelCase(key), prop, target.state[key]);
-					children.push(child);
+					if (prop.type != null || prop.children instanceof Array) {
+						const child = renderPropEditor(target, camelCase(key), prop, target.state[key]);
+						children.push(child);
+					}
 				}
 			});
 		}
@@ -48,12 +50,18 @@ export default class PropertyList extends Component {
 	}
 	mounted(dom) {
 		dom.addEventListener('input', e => {
-			const name = (e.target.name || '').replace('wmprop-', '');
-			let value = (e.target.value || '').trim();
-			if (e.target.type === 'checkbox') {
-				value = e.target.checked;
+			if (!this.state.target) {
+				return;
 			}
-			if (this.state.target && name in this.state.target.props) {
+			const name = (e.target.name || '').replace('wmprop-', '');
+			const prop = name in this.state.target.props
+				? this.state.target.props[name]
+				: null;
+			if (prop) {
+				let value = (e.target.value || '').trim();
+				if (e.target.type === 'checkbox') {
+					value = e.target.checked;
+				}
 				this.setValue(name, value);
 			}
 		});
@@ -61,7 +69,9 @@ export default class PropertyList extends Component {
 	setValue(key, value) {
 		const target = this.state.target;
 		const prop = target.props[key];
-		const convertedValue = prop.type(value);
+		const convertedValue = typeof prop.filter === 'function'
+			? prop.filter(value)
+			: prop.type(value);
 		target.state[key] = convertedValue;
 		this.emit('input', target, prop, convertedValue);
 	}

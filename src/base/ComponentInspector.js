@@ -1,8 +1,10 @@
+import { debounce } from 'lodash';
 import ComponentHandler from './ComponentHandler';
 import PropertyList from '../elements/editor/PropertyList';
 import InspectorHeader from '../elements/editor/InspectorHeader';
 import InspectorDialogSelector from '../elements/editor/InspectorDialogSelector';
 import outsideElementCallback from '../utils/outsideElementCallback';
+import { shouldComponentBeVisible, bindResponsiveEventsTo, unbindResponsiveEventsFrom } from '../utils/editor/responsiveUtils';
 
 export default class ComponentInspector extends ComponentHandler {
 	constructor(parent, handler, components) {
@@ -42,6 +44,8 @@ export default class ComponentInspector extends ComponentHandler {
 		this.selector.on('change:showing', showing => {
 			if (showing) {
 				setTimeout(() => {
+					// before adding the event that detects whether it should be closed or not
+					// when clicked outside... actually wait 1ms, otherwise the event will fire right away
 					document.addEventListener('click', this.hideSelector);
 				}, 1);
 			}
@@ -63,6 +67,9 @@ export default class ComponentInspector extends ComponentHandler {
 			propList.on('change:visible', visible => {
 				component.instance.dom.classList.toggle('-wm-invisible', !visible);
 			});
+			propList.on('check:resize', (width, height) => {
+				propList.state.visible = shouldComponentBeVisible(component, width, height);
+			});
 			propList.on('trash', () => {
 				if (confirm(`Remove this component?`)) {
 					this.handler.remove(propList.state.target);
@@ -70,10 +77,16 @@ export default class ComponentInspector extends ComponentHandler {
 			});
 			this.add(propList);
 			this.moveContainerWithinBounds();
+			const handler = debounce(() => {
+				this.makePropListCheckResize(propList);
+			}, 200);
+			bindResponsiveEventsTo(component, handler);
+			handler();
 		});
 		this.handler.on('remove', components => {
 			for (let i = 0; i < components.length; i++) {
 				const component = components[i];
+				unbindResponsiveEventsFrom(component);
 				for (let j = 0; j < this.components.length; j++) {
 					const propList = this.components[j];
 					if (propList.state.target && propList.state.target === component) {
@@ -93,6 +106,11 @@ export default class ComponentInspector extends ComponentHandler {
 		// set container position
 		this.setContainerPosition(0, 0);
 		this.moveContainerWithinBounds();
+
+		// on resize?
+		this.onResize = debounce(this.onResize.bind(this), 500);
+		this.onResize();
+		window.addEventListener('resize', this.onResize);
 
 		// append the inspector to its place
 		parent.appendChild(this.container);
@@ -138,5 +156,23 @@ export default class ComponentInspector extends ComponentHandler {
 			// TODO: calc bounds
 			console.log('move dialog within window bounds now');
 		}, 1);
+	}
+	onResize() {
+		this.moveContainerWithinBounds();
+
+		// get current width and height, update header resolution label
+		const windowWidth = window.innerWidth;
+		const windowHeight = window.innerHeight;
+		this.header.state.subtitle = `(${windowWidth}x${windowHeight})`;
+
+		// make every propList evaluate itself
+		this.components.forEach(component => {
+			component.emit('check:resize', windowWidth, windowHeight);
+		});
+	}
+	makePropListCheckResize(propList) {
+		const windowWidth = window.innerWidth;
+		const windowHeight = window.innerHeight;
+		propList.emit('check:resize', windowWidth, windowHeight);
 	}
 }
