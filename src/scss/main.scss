@@ -22,7 +22,6 @@ body {
 		display: block;
 		font-size: 24px;
 		line-height: 6px; // why? I don't know. but it looks best in chrome that way
-		vertical-align: middle;
 	}
 
 	.wm-icon {
@@ -88,4 +87,9 @@ body {
 
 	@import 'editor/inspector';
 	@import 'elements/column-grid';
+
+	.-wm-invisible {
+		display: none !important;
+		visibility: hidden !important;
+	}
 }

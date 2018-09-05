@@ -9,7 +9,7 @@ export default class InspectorHeader extends Component {
 	render() {
 		return <div className="wm-inspector-header -wm-flex">
 			<span className="-wmfl-title">{this.state.title}</span>
-			<span className="-wmfl-option" title="Add component" onClick={() => this.emit('select')}>
+			<span className="-wmfl-option" title="Add component..." onClick={() => this.emit('select')}>
 				<i className="material-icons">add</i>
 			</span>
 		</div>;

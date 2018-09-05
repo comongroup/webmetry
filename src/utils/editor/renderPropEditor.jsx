@@ -28,6 +28,9 @@ export function renderPropEditorInput(target, propKey, propObject, value) {
 
 	switch (propObject.type) {
 		case Number: return <input type="number" {...props} />;
+		case Boolean:
+			props.checked = props.value;
+			return <input type="checkbox" {...props} />;
 		default: return <input type="text" {...props} />;
 	}
 }

@@ -15,12 +15,21 @@
 	}
 
 	> .wm-property-list-props {
+		display: none;
 		padding: 5px 15px;
+
+		> .wm-property-field-header {
+			font-weight: bold;
+			opacity: 0.65;
+			padding: 15px 0 5px;
+			text-transform: uppercase;
+		}
 
 		> .wm-property-field {
 			display: flex;
 			align-items: center;
 			justify-content: flex-start;
+			min-height: 30px;
 			padding: 2px 0px;
 
 			> .prop-name {
@@ -57,9 +66,9 @@
 		}
 	}
 
-	&.-wm-hidden {
+	&.-wm-expanded {
 		> .wm-property-list-props {
-			display: none;
+			display: block;
 		}
 	}
 }
