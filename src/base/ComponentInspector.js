@@ -1,8 +1,10 @@
+import { debounce } from 'lodash';
 import ComponentHandler from './ComponentHandler';
 import PropertyList from '../elements/editor/PropertyList';
 import InspectorHeader from '../elements/editor/InspectorHeader';
 import InspectorDialogSelector from '../elements/editor/InspectorDialogSelector';
 import outsideElementCallback from '../utils/outsideElementCallback';
+import { shouldComponentBeVisible, bindResponsiveEventsTo, unbindResponsiveEventsFrom } from '../utils/editor/responsiveUtils';
 
 export default class ComponentInspector extends ComponentHandler {
 	constructor(parent, handler, components) {
@@ -21,7 +23,7 @@ export default class ComponentInspector extends ComponentHandler {
 		}));
 		this.header.on('select', () => {
 			this.selector.show();
-			this.moveContainerWithinBounds();
+			this.moveDialogWithinBounds();
 		});
 		this.header.on('drag', (x, y) => {
 			this.moveContainer(x, y);
@@ -33,7 +35,7 @@ export default class ComponentInspector extends ComponentHandler {
 		// add inspector dialog selector
 		this.selector = this.add(new InspectorDialogSelector({
 			components: components || [],
-			title: 'Add component'
+			title: 'Add component...'
 		}));
 		this.selector.on('select', component => {
 			this.handler.add(new component()); // eslint-disable-line new-cap
@@ -42,6 +44,8 @@ export default class ComponentInspector extends ComponentHandler {
 		this.selector.on('change:showing', showing => {
 			if (showing) {
 				setTimeout(() => {
+					// before adding the event that detects whether it should be closed or not
+					// when clicked outside... actually wait 1ms, otherwise the event will fire right away
 					document.addEventListener('click', this.hideSelector);
 				}, 1);
 			}
@@ -57,23 +61,37 @@ export default class ComponentInspector extends ComponentHandler {
 		this.handler = handler;
 		this.handler.on('add', component => {
 			const propList = new PropertyList({ target: component });
-			propList.on('change:hidden', () => {
+			propList.on('change:expanded', () => {
 				this.moveContainerWithinBounds();
 			});
+			propList.on('change:visible', visible => {
+				component.instance.dom.classList.toggle('-wm-invisible', !visible);
+			});
+			propList.on('check:resize', (width, height) => {
+				propList.state.visible = shouldComponentBeVisible(component, width, height);
+			});
 			propList.on('trash', () => {
-				this.handler.remove(propList.state.target);
-				this.remove(propList);
+				if (confirm(`Remove this component?`)) {
+					this.handler.remove(propList.state.target);
+				}
 			});
 			this.add(propList);
 			this.moveContainerWithinBounds();
+			const handler = debounce(() => {
+				this.makePropListCheckResize(propList);
+			}, 200);
+			bindResponsiveEventsTo(component, handler);
+			handler();
 		});
 		this.handler.on('remove', components => {
 			for (let i = 0; i < components.length; i++) {
 				const component = components[i];
+				unbindResponsiveEventsFrom(component);
 				for (let j = 0; j < this.components.length; j++) {
 					const propList = this.components[j];
 					if (propList.state.target && propList.state.target === component) {
 						this.remove(propList);
+						this.moveContainerWithinBounds();
 						break;
 					}
 				}
@@ -85,30 +103,76 @@ export default class ComponentInspector extends ComponentHandler {
 		this.container.appendChild(this.selector.instance.dom);
 		this.container.appendChild(inside);
 
+		// set container position
+		this.setContainerPosition(0, 0);
+		this.moveContainerWithinBounds();
+
+		// on resize?
+		this.onResize = debounce(this.onResize.bind(this), 500);
+		this.onResize();
+		window.addEventListener('resize', this.onResize);
+
 		// append the inspector to its place
 		parent.appendChild(this.container);
+	}
+	setContainerPosition(x, y) {
+		this.container.style.left = x + 'px';
+		this.container.style.top = y + 'px';
 	}
 	moveContainer(x, y) {
 		const currentLeft = parseInt(this.container.style.left || 0, 10);
 		const currentTop = parseInt(this.container.style.top || 0, 10);
-		this.container.style.left = (currentLeft - x) + 'px';
-		this.container.style.top = (currentTop - y) + 'px';
+		this.setContainerPosition(
+			currentLeft - x,
+			currentTop - y
+		);
+
+		// check if container should be snapped to bottom
+		const docEl = (document.documentElement || document.body);
+		const maxTop = docEl.clientHeight - this.container.clientHeight;
+		this.snappedToBottom = (currentTop - y) >= maxTop;
 	}
 	moveContainerWithinBounds() {
+		// before getting sizes and whatnot,
+		// let the browser do all the calcs
 		setTimeout(() => {
 			const docEl = (document.documentElement || document.body);
 			const maxLeft = docEl.clientWidth - this.container.clientWidth;
 			const maxTop = docEl.clientHeight - this.container.clientHeight;
 			const currentLeft = parseInt(this.container.style.left || 0, 10);
-			const currentTop = parseInt(this.container.style.top || 0, 10);
-			this.container.style.left = Math.max(0, Math.min(maxLeft, currentLeft)) + 'px';
-			this.container.style.top = Math.max(0, Math.min(maxTop, currentTop)) + 'px';
+			const currentTop = !this.snappedToBottom
+				? parseInt(this.container.style.top || 0, 10)
+				: maxTop; // snap to bottom cause boolean tells us to
+			this.setContainerPosition(
+				Math.max(0, Math.min(maxLeft, currentLeft)),
+				Math.max(0, Math.min(maxTop, currentTop))
+			);
 		}, 1);
 	}
-	snapContainerToBottom() {
-		// TODO: actually call this method
-		const docEl = (document.documentElement || document.body);
-		const maxTop = docEl.clientHeight - this.container.clientHeight;
-		this.container.style.top = maxTop + 'px';
+	moveDialogWithinBounds() {
+		// before getting sizes and whatnot,
+		// let the browser do all the calcs
+		setTimeout(() => {
+			// TODO: calc bounds
+			console.log('move dialog within window bounds now');
+		}, 1);
+	}
+	onResize() {
+		this.moveContainerWithinBounds();
+
+		// get current width and height, update header resolution label
+		const windowWidth = window.innerWidth;
+		const windowHeight = window.innerHeight;
+		this.header.state.subtitle = `(${windowWidth}x${windowHeight})`;
+
+		// make every propList evaluate itself
+		this.components.forEach(component => {
+			component.emit('check:resize', windowWidth, windowHeight);
+		});
+	}
+	makePropListCheckResize(propList) {
+		const windowWidth = window.innerWidth;
+		const windowHeight = window.innerHeight;
+		propList.emit('check:resize', windowWidth, windowHeight);
 	}
 }
