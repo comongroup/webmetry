@@ -46,7 +46,7 @@ export function renderPropEditorInput(target, propKey, propObject, value, isRecu
 }
 
 export default function renderPropEditor(target, propKey, propObject, value) {
-	const name = startCase(propKey);
+	const name = propObject.label || startCase(propKey);
 	const title = propObject.title || name;
 	const input = renderPropEditorInput(target, propKey, propObject, value);
 

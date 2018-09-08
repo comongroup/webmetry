@@ -6,8 +6,13 @@ export default class Component extends Emitter {
 	constructor(options, props, name) {
 		super();
 
+		// name handling
+		name = name || this.constructor.name;
+		this.getName = () => typeof name === 'function'
+			? name(this)
+			: name;
+
 		// props (public so the editor can access them)
-		this.name = name || this.constructor.name;
 		this.props = defaultsDeep(props || {}, {});
 
 		// state

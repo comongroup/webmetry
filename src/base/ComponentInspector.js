@@ -4,7 +4,8 @@ import PropertyList from '../elements/editor/PropertyList';
 import InspectorHeader from '../elements/editor/InspectorHeader';
 import InspectorDialogSelector from '../elements/editor/InspectorDialogSelector';
 import outsideElementCallback from '../utils/outsideElementCallback';
-import { shouldComponentBeVisible, bindResponsiveEventsTo, unbindResponsiveEventsFrom } from '../utils/editor/responsiveUtils';
+import { bindNameEventsTo, unbindNameEventsFrom } from '../utils/editor/nameUtils';
+import { bindResponsiveEventsTo, shouldComponentBeVisible, unbindResponsiveEventsFrom } from '../utils/editor/responsiveUtils';
 
 export default class ComponentInspector extends ComponentHandler {
 	constructor(parent, handler, components) {
@@ -77,15 +78,22 @@ export default class ComponentInspector extends ComponentHandler {
 			});
 			this.add(propList);
 			this.moveContainerWithinBounds();
-			const handler = debounce(() => {
+			// TODO: need to refactor all of this below
+			const nameHandler = debounce(() => {
+				propList.emit('change');
+			}, 500);
+			const responsiveHandler = debounce(() => {
 				this.makePropListCheckResize(propList);
 			}, 200);
-			bindResponsiveEventsTo(component, handler);
-			handler();
+			bindNameEventsTo(component, nameHandler);
+			bindResponsiveEventsTo(component, responsiveHandler);
+			responsiveHandler();
+			// TODO: need to refactor all of this above
 		});
 		this.handler.on('remove', components => {
 			for (let i = 0; i < components.length; i++) {
 				const component = components[i];
+				unbindNameEventsFrom(component);
 				unbindResponsiveEventsFrom(component);
 				for (let j = 0; j < this.components.length; j++) {
 					const propList = this.components[j];
