@@ -11,7 +11,7 @@ export default class InspectorDialogSelector extends Component {
 		const children = [];
 		for (let i = 0; i < this.state.components.length; i++) {
 			const item = this.state.components[i];
-			children.push(<li onClick={() => this.emit('select', item.c)}>{item.title}</li>);
+			children.push(<li onClick={() => this.emit('select', item.ctor)}>{item.title}</li>);
 		}
 		return <div className={`wm-inspector-dialog-selector${this.state.showing ? ' -wm-showing' : ''}`}>
 			<div className="wm-inspector-dialog-selector-header -wm-flex">
