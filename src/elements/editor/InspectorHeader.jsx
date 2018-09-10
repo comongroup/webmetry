@@ -1,21 +1,26 @@
+import { map } from 'lodash';
 import Component from '../../base/Component';
 
 export default class InspectorHeader extends Component {
 	constructor(options) {
 		super(options, {
 			title: { type: String, default: 'Header title' },
-			subtitle: { type: String }
+			subtitle: { type: String },
+			options: { type: Array }
 		});
 	}
 	render() {
+		const options = map(this.state.options, option => {
+			return <span className="-wmfl-option" title={option.title} onClick={option.onClick}>
+				<i className="material-icons">{option.icon}</i>
+			</span>;
+		});
 		return <div className="wm-inspector-header -wm-flex">
 			<span className="-wmfl-title">
 				{this.state.title}
 			</span>
 			{this.state.subtitle ? <span className="-wmfl-label">{this.state.subtitle}</span> : null}
-			<span className="-wmfl-option" title="Add component..." onClick={() => this.emit('select')}>
-				<i className="material-icons">add</i>
-			</span>
+			{options}
 		</div>;
 	}
 	mounted(dom) {

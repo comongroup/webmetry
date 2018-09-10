@@ -9,7 +9,10 @@ export default class ComponentRepository {
 	}
 	getList() {
 		return map(this.entries, entry => {
-			return entry;
+			return {
+				title: entry.title,
+				result: entry.ctor
+			};
 		});
 	}
 }

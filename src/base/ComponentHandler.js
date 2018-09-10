@@ -36,8 +36,11 @@ export default class ComponentHandler extends Emitter {
 		if (index !== -1) {
 			const deleted = this.components.splice(index, 1);
 			if (component.instance) {
-				this.parent.removeChild(component.instance.dom);
-				component.unmounted(component.instance.dom);
+				const dom = component.instance.dom;
+				if (dom.parentElement) {
+					dom.parentElement.removeChild(dom);
+				}
+				component.unmounted(dom);
 				delete component.instance;
 			}
 			this.emit('remove', deleted, index);

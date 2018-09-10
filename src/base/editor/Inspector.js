@@ -1,14 +1,14 @@
 import { debounce } from 'lodash';
-import ComponentHandler from './ComponentHandler';
-import PropertyList from '../elements/editor/PropertyList';
-import InspectorHeader from '../elements/editor/InspectorHeader';
-import InspectorDialog from '../elements/editor/InspectorDialog';
-import outsideElementCallback from '../utils/outsideElementCallback';
-import { bindNameEventsTo, unbindNameEventsFrom } from '../utils/editor/nameUtils';
-import { bindResponsiveEventsTo, shouldComponentBeVisible, unbindResponsiveEventsFrom } from '../utils/editor/responsiveUtils';
+import DialogHandler from './DialogHandler';
+import PropertyList from '../../elements/editor/PropertyList';
+import InspectorHeader from '../../elements/editor/InspectorHeader';
+import { repo } from '../../utils/io';
+import { bindNameEventsTo, unbindNameEventsFrom } from '../../utils/editor/nameUtils';
+import renderIcon from '../../utils/editor/renderIcon';
+import { bindResponsiveEventsTo, shouldComponentBeVisible, unbindResponsiveEventsFrom } from '../../utils/editor/responsiveUtils';
 
-export default class ComponentInspector extends ComponentHandler {
-	constructor(parent, handler, components) {
+export default class Inspector extends DialogHandler {
+	constructor(parent, handler) {
 		// create inside element
 		const inside = document.createElement('div');
 		inside.className = 'wm-inspector-inside';
@@ -20,22 +20,22 @@ export default class ComponentInspector extends ComponentHandler {
 
 		// add inspector header
 		this.header = this.add(new InspectorHeader({
-			title: 'Webmetry'
+			title: 'Webmetry',
+			options: [
+				{
+					icon: 'import_export',
+					title: 'Import/export...',
+					onClick: () => this.spawnImportExportDialog()
+				},
+				{
+					icon: 'add',
+					title: 'Add component...',
+					onClick: () => this.spawnAddComponentDialog()
+				}
+			]
 		}));
-		this.header.on('select', () => {
-			this.spawnDialog({
-				title: 'Add component...',
-				items: components || []
-			}, component => {
-				this.handler.add(new component()); // eslint-disable-line new-cap
-			});
-		});
-		this.header.on('drag', (x, y) => {
-			this.moveContainer(x, y);
-		});
-		this.header.on('dragstop', () => {
-			this.moveContainerWithinBounds();
-		});
+		this.header.on('drag', this.moveContainer.bind(this));
+		this.header.on('dragstop', this.moveContainerWithinBounds.bind(this));
 
 		// handle the handler's events
 		this.handler = handler;
@@ -153,26 +153,21 @@ export default class ComponentInspector extends ComponentHandler {
 			);
 		}, 1);
 	}
-	spawnDialog(options, onSelect) {
-		const dialog = new InspectorDialog(options);
-		dialog.show();
-		dialog.on('select', item => {
-			if (typeof onSelect === 'function') {
-				onSelect(item);
-			}
-			this.dismissDialog(dialog);
+	spawnAddComponentDialog() {
+		this.spawnDialog({
+			title: 'Add component...',
+			items: repo.getList()
+		}).on('select', component => {
+			this.handler.add(new component()); // eslint-disable-line new-cap
 		});
-		this.add(dialog);
-		setTimeout(() => {
-			dialog.hideCallback = outsideElementCallback(dialog.instance.dom, () => {
-				this.dismissDialog(dialog);
-			});
-			document.addEventListener('click', dialog.hideCallback);
-		}, 1);
-		return dialog;
 	}
-	dismissDialog(dialog) {
-		document.removeEventListener('click', dialog.hideCallback);
-		this.remove(dialog);
+	spawnImportExportDialog() {
+		this.spawnDialog({
+			title: 'Import/export...',
+			items: [
+				{ title: renderIcon('redo', 'Import from JSON') },
+				{ title: renderIcon('undo', 'Export as JSON') }
+			]
+		});
 	}
 }

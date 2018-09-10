@@ -1,5 +1,5 @@
 import ComponentHandler from './src/base/ComponentHandler';
-import ComponentInspector from './src/base/ComponentInspector';
+import Inspector from './src/base/editor/Inspector';
 import bindComponents from './src/bindComponents';
 import { repo } from './src/utils/io';
 import './src/scss/main.scss';
@@ -14,5 +14,5 @@ document.body.appendChild(wmElement);
 
 // configure main component handler, and inspector
 const handler = new ComponentHandler(wmElement);
-const inspector = new ComponentInspector(wmElement, handler, repo.getList());
+const inspector = new Inspector(wmElement, handler);
 window.wmInstance = { handler, inspector };
