@@ -1,6 +1,6 @@
 import Component from '../../base/Component';
 
-export default class InspectorDialogSelector extends Component {
+export default class InspectorDialog extends Component {
 	constructor(options) {
 		super(options, {
 			showing: { type: Boolean, default: false },
@@ -9,8 +9,8 @@ export default class InspectorDialogSelector extends Component {
 	}
 	render() {
 		const children = [];
-		for (let i = 0; i < this.state.components.length; i++) {
-			const item = this.state.components[i];
+		for (let i = 0; i < this.state.items.length; i++) {
+			const item = this.state.items[i];
 			children.push(<li onClick={() => this.emit('select', item.ctor)}>{item.title}</li>);
 		}
 		return <div className={`wm-inspector-dialog-selector${this.state.showing ? ' -wm-showing' : ''}`}>

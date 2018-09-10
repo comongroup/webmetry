@@ -2,7 +2,7 @@ import { debounce } from 'lodash';
 import ComponentHandler from './ComponentHandler';
 import PropertyList from '../elements/editor/PropertyList';
 import InspectorHeader from '../elements/editor/InspectorHeader';
-import InspectorDialogSelector from '../elements/editor/InspectorDialogSelector';
+import InspectorDialog from '../elements/editor/InspectorDialog';
 import outsideElementCallback from '../utils/outsideElementCallback';
 import { bindNameEventsTo, unbindNameEventsFrom } from '../utils/editor/nameUtils';
 import { bindResponsiveEventsTo, shouldComponentBeVisible, unbindResponsiveEventsFrom } from '../utils/editor/responsiveUtils';
@@ -23,39 +23,18 @@ export default class ComponentInspector extends ComponentHandler {
 			title: 'Webmetry'
 		}));
 		this.header.on('select', () => {
-			this.selector.show();
-			this.moveDialogWithinBounds();
+			this.spawnDialog({
+				title: 'Add component...',
+				items: components || []
+			}, component => {
+				this.handler.add(new component()); // eslint-disable-line new-cap
+			});
 		});
 		this.header.on('drag', (x, y) => {
 			this.moveContainer(x, y);
 		});
 		this.header.on('dragstop', () => {
 			this.moveContainerWithinBounds();
-		});
-
-		// add inspector dialog selector
-		this.selector = this.add(new InspectorDialogSelector({
-			components: components || [],
-			title: 'Add component...'
-		}));
-		this.selector.on('select', component => {
-			this.handler.add(new component()); // eslint-disable-line new-cap
-			this.selector.hide();
-		});
-		this.selector.on('change:showing', showing => {
-			if (showing) {
-				setTimeout(() => {
-					// before adding the event that detects whether it should be closed or not
-					// when clicked outside... actually wait 1ms, otherwise the event will fire right away
-					document.addEventListener('click', this.hideSelector);
-				}, 1);
-			}
-			else {
-				document.removeEventListener('click', this.hideSelector);
-			}
-		});
-		this.hideSelector = outsideElementCallback(this.selector.instance.dom, () => {
-			this.selector.hide();
 		});
 
 		// handle the handler's events
@@ -108,7 +87,6 @@ export default class ComponentInspector extends ComponentHandler {
 
 		// move header and selector, and add list
 		this.container.appendChild(this.header.instance.dom);
-		this.container.appendChild(this.selector.instance.dom);
 		this.container.appendChild(inside);
 
 		// set container position
@@ -122,6 +100,24 @@ export default class ComponentInspector extends ComponentHandler {
 
 		// append the inspector to its place
 		parent.appendChild(this.container);
+	}
+	onResize() {
+		this.moveContainerWithinBounds();
+
+		// get current width and height, update header resolution label
+		const windowWidth = window.innerWidth;
+		const windowHeight = window.innerHeight;
+		this.header.state.subtitle = `(${windowWidth}x${windowHeight})`;
+
+		// make every propList evaluate itself
+		this.components.forEach(component => {
+			component.emit('check:resize', windowWidth, windowHeight);
+		});
+	}
+	makePropListCheckResize(propList) {
+		const windowWidth = window.innerWidth;
+		const windowHeight = window.innerHeight;
+		propList.emit('check:resize', windowWidth, windowHeight);
 	}
 	setContainerPosition(x, y) {
 		this.container.style.left = x + 'px';
@@ -157,30 +153,26 @@ export default class ComponentInspector extends ComponentHandler {
 			);
 		}, 1);
 	}
-	moveDialogWithinBounds() {
-		// before getting sizes and whatnot,
-		// let the browser do all the calcs
-		setTimeout(() => {
-			// TODO: calc bounds
-			console.log('move dialog within window bounds now');
-		}, 1);
-	}
-	onResize() {
-		this.moveContainerWithinBounds();
-
-		// get current width and height, update header resolution label
-		const windowWidth = window.innerWidth;
-		const windowHeight = window.innerHeight;
-		this.header.state.subtitle = `(${windowWidth}x${windowHeight})`;
-
-		// make every propList evaluate itself
-		this.components.forEach(component => {
-			component.emit('check:resize', windowWidth, windowHeight);
+	spawnDialog(options, onSelect) {
+		const dialog = new InspectorDialog(options);
+		dialog.show();
+		dialog.on('select', item => {
+			if (typeof onSelect === 'function') {
+				onSelect(item);
+			}
+			this.dismissDialog(dialog);
 		});
+		this.add(dialog);
+		setTimeout(() => {
+			dialog.hideCallback = outsideElementCallback(dialog.instance.dom, () => {
+				this.dismissDialog(dialog);
+			});
+			document.addEventListener('click', dialog.hideCallback);
+		}, 1);
+		return dialog;
 	}
-	makePropListCheckResize(propList) {
-		const windowWidth = window.innerWidth;
-		const windowHeight = window.innerHeight;
-		propList.emit('check:resize', windowWidth, windowHeight);
+	dismissDialog(dialog) {
+		document.removeEventListener('click', dialog.hideCallback);
+		this.remove(dialog);
 	}
 }
