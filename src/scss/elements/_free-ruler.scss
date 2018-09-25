@@ -1,4 +1,25 @@
 .wm-free-ruler {
 	position: fixed;
 	z-index: $z-index-general;
+
+	canvas {
+		position: fixed;
+		pointer-events: none;
+	}
+
+	div {
+		position:absolute;
+		border-radius: 50%;
+		width: 15px;
+		height: 15px;
+		transform: scale(0.9);
+		transition: transform 250ms ease-out, opacity 250ms ease-out;
+		opacity: 0.5;
+		user-select: none;
+
+		&:hover {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
 }
