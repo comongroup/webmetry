@@ -14,12 +14,12 @@ export default class FreeRuler extends Component {
 			fixedFullAxisColor: { type: String, default: '#FFFFFF', picker: 'color' },
 			angleColor: { type: String, default: '#FFFFFF', picker: 'color' },
 			distanceColor: { type: String, default: '#FFFFFF', picker: 'color' },
-			rulerOpacity: { type: Number, default: 100 },
-			orientedAxisOpacity: { type: Number, default: 100 },
-			fixedAxisOpacity: { type: Number, default: 15 },
-			fixedFullAxisOpacity: { type: Number, default: 100 },
-			angleOpacity: { type: Number, default: 100 },
-			distanceOpacity: { type: Number, default: 100 },
+			rulerOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
+			orientedAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
+			fixedAxisOpacity: { type: Number, default: 0.15, picker: 'slider', range: [0, 1], step: 0.05 },
+			fixedFullAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
+			angleOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
+			distanceOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
 			ruler: { type: Boolean, default: true, header: 'Toggles' },
 			handles: { type: Boolean, default: true },
 			orientedAxis: { type: Boolean, default: true },
@@ -141,7 +141,7 @@ export default class FreeRuler extends Component {
 		ctx.imageSmoothingEnabled = true;
 		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		if (this.state.ruler) {
-			ctx.globalAlpha = Math.max(0, Math.min(this.state.rulerOpacity, 100)) / 100;
+			ctx.globalAlpha = this.state.rulerOpacity;
 			ctx.strokeStyle = this.state.rulerColor;
 			ctx.beginPath();
 			ctx.moveTo(c01.x, c01.y);
@@ -150,7 +150,7 @@ export default class FreeRuler extends Component {
 		}
 
 		if (this.state.fixedAxis) {
-			ctx.globalAlpha = Math.max(0, Math.min(this.state.fixedAxisOpacity, 100)) / 100;
+			ctx.globalAlpha = this.state.fixedAxisOpacity;
 			ctx.beginPath();
 			ctx.strokeStyle = this.state.fixedAxisColor;
 			ctx.moveTo(c01.x - this.state.axisLength, c01.y);
@@ -166,7 +166,7 @@ export default class FreeRuler extends Component {
 		}
 
 		if (this.state.fixedFullAxis) {
-			ctx.globalAlpha = Math.max(0, Math.min(this.state.fixedFullAxisOpacity, 100)) / 100;
+			ctx.globalAlpha = this.state.fixedFullAxisOpacity;
 			ctx.beginPath();
 			ctx.strokeStyle = this.state.fixedFullAxisColor;
 			ctx.moveTo(0, c01.y);
@@ -184,7 +184,7 @@ export default class FreeRuler extends Component {
 		let ang = angleTo2.rad;
 
 		if (this.state.orientedAxis) {
-			ctx.globalAlpha = Math.max(0, Math.min(this.state.orientedAxisOpacity, 100)) / 100;
+			ctx.globalAlpha = this.state.orientedAxisOpacity;
 			ctx.beginPath();
 			ctx.strokeStyle = this.state.orientedAxisColor;
 			ang = angleTo2.rad;
@@ -216,7 +216,7 @@ export default class FreeRuler extends Component {
 		}
 
 		if (this.state.angle) {
-			ctx.globalAlpha = Math.max(0, Math.min(this.state.angleOpacity, 100)) / 100;
+			ctx.globalAlpha = this.state.angleOpacity;
 			ctx.save();
 			ang = angleTo2.rad;
 			ctx.translate(c02.x - (Math.cos(ang) * (dist / 2)), c02.y - (Math.sin(ang) * (dist / 2)));
@@ -232,7 +232,7 @@ export default class FreeRuler extends Component {
 		}
 
 		if (this.state.distance) {
-			ctx.globalAlpha = Math.max(0, Math.min(this.state.distanceOpacity, 100)) / 100;
+			ctx.globalAlpha = this.state.distanceOpacity;
 			ctx.save();
 			ang = angleTo2.rad;
 			ctx.translate(c02.x - (Math.cos(ang) * (dist / 2)), c02.y - (Math.sin(ang) * (dist / 2)));
