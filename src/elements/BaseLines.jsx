@@ -56,7 +56,7 @@ export default class BaseLines extends Component {
 	}
 	gap() {
 		const style = {
-			height: this.state.gapSize
+			height: `calc(${this.state.gapSize} - ${this.state.lineThickness})`
 		};
 		return <div className="gap" style={style}></div>;
 	}

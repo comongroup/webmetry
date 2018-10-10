@@ -10,13 +10,13 @@ export default class FreeRuler extends Component {
 			handlerColor: { type: String, default: '#AA2222', picker: 'color' },
 			rulerColor: { type: String, default: '#FFFFFF', picker: 'color' },
 			orientedAxisColor: { type: String, default: '#FF2222', picker: 'color' },
-			fixedAxisColor: { type: String, default: '#FFFFFF', picker: 'color' },
+			fixedAxisColor: { type: String, default: '#00FF00', picker: 'color' },
 			fixedFullAxisColor: { type: String, default: '#FFFFFF', picker: 'color' },
 			angleColor: { type: String, default: '#FFFFFF', picker: 'color' },
 			distanceColor: { type: String, default: '#FFFFFF', picker: 'color' },
 			rulerOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
 			orientedAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
-			fixedAxisOpacity: { type: Number, default: 0.15, picker: 'slider', range: [0, 1], step: 0.05 },
+			fixedAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
 			fixedFullAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
 			angleOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
 			distanceOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
@@ -43,6 +43,11 @@ export default class FreeRuler extends Component {
 			<div style={hdlStyle}></div>
 			<div style={hdlStyle}></div>
 		</div>;
+	}
+	rendered(dom) {
+		if (this.canvas) {
+			this.updateCanvas();
+		}
 	}
 	mounted(dom) {
 		this.midHandler = dom.querySelectorAll('div')[0];
@@ -149,22 +154,6 @@ export default class FreeRuler extends Component {
 			ctx.stroke();
 		}
 
-		if (this.state.fixedAxis) {
-			ctx.globalAlpha = this.state.fixedAxisOpacity;
-			ctx.beginPath();
-			ctx.strokeStyle = this.state.fixedAxisColor;
-			ctx.moveTo(c01.x - this.state.axisLength, c01.y);
-			ctx.lineTo(c01.x + this.state.axisLength, c01.y);
-			ctx.moveTo(c01.x, c01.y - this.state.axisLength);
-			ctx.lineTo(c01.x, c01.y + this.state.axisLength);
-
-			ctx.moveTo(c02.x - this.state.axisLength, c02.y);
-			ctx.lineTo(c02.x + this.state.axisLength, c02.y);
-			ctx.moveTo(c02.x, c02.y - this.state.axisLength);
-			ctx.lineTo(c02.x, c02.y + this.state.axisLength);
-			ctx.stroke();
-		}
-
 		if (this.state.fixedFullAxis) {
 			ctx.globalAlpha = this.state.fixedFullAxisOpacity;
 			ctx.beginPath();
@@ -178,6 +167,22 @@ export default class FreeRuler extends Component {
 			ctx.lineTo(window.innerWidth, c02.y);
 			ctx.moveTo(c02.x, 0);
 			ctx.lineTo(c02.x, window.innerHeight);
+			ctx.stroke();
+		}
+
+		if (this.state.fixedAxis) {
+			ctx.globalAlpha = this.state.fixedAxisOpacity;
+			ctx.beginPath();
+			ctx.strokeStyle = this.state.fixedAxisColor;
+			ctx.moveTo(c01.x - this.state.axisLength, c01.y);
+			ctx.lineTo(c01.x + this.state.axisLength, c01.y);
+			ctx.moveTo(c01.x, c01.y - this.state.axisLength);
+			ctx.lineTo(c01.x, c01.y + this.state.axisLength);
+
+			ctx.moveTo(c02.x - this.state.axisLength, c02.y);
+			ctx.lineTo(c02.x + this.state.axisLength, c02.y);
+			ctx.moveTo(c02.x, c02.y - this.state.axisLength);
+			ctx.lineTo(c02.x, c02.y + this.state.axisLength);
 			ctx.stroke();
 		}
 

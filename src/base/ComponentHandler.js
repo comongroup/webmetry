@@ -57,6 +57,7 @@ export default class ComponentHandler extends Emitter {
 			const instance = reconcile(this.parent, null, component.render());
 			component.instance = instance;
 		}
+		component.rendered(component.dom);
 		return component;
 	}
 }
