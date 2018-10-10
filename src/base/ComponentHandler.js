@@ -15,8 +15,10 @@ export default class ComponentHandler extends Emitter {
 			// so that we know when to rerender
 			component.on('change', (key, value, old) => {
 				this.render(component);
-				this.emit('change:' + key, component, value, old);
-				this.emit('change', component, key, value, old);
+				if (key != null) {
+					this.emit('change:' + key, component, value, old);
+					this.emit('change', component, key, value, old);
+				}
 			});
 
 			// render for the first time now
@@ -34,8 +36,11 @@ export default class ComponentHandler extends Emitter {
 		if (index !== -1) {
 			const deleted = this.components.splice(index, 1);
 			if (component.instance) {
-				this.parent.removeChild(component.instance.dom);
-				component.unmounted(component.instance.dom);
+				const dom = component.instance.dom;
+				if (dom.parentElement) {
+					dom.parentElement.removeChild(dom);
+				}
+				component.unmounted(dom);
 				delete component.instance;
 			}
 			this.emit('remove', deleted, index);

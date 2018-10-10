@@ -12,11 +12,12 @@
 	}
 
 	.wm-inspector-inside {
-		max-height: calc(100vh - 42px);
+		max-height: calc(100vh - #{$height-header-inspector});
+		min-height: $height-list-inspector;
 		overflow: auto;
 	}
 
 	@import 'inspector-header';
-	@import 'inspector-dialog-selector';
+	@import 'inspector-dialog';
 	@import 'property-list';
 }

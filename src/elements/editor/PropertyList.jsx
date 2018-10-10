@@ -37,7 +37,7 @@ export default class PropertyList extends Component {
 						? <i className="material-icons">keyboard_arrow_up</i>
 						: <i className="material-icons">keyboard_arrow_down</i>}
 				</span>
-				<span className="-wmfl-title">{target.name}</span>
+				<span className="-wmfl-title">{target.getName()}</span>
 				<span className="-wmfl-option -wmfl-on-hover" title="Delete component" onClick={e => this.deleteTarget(e)}>
 					<i className="material-icons">delete_outline</i>
 				</span>

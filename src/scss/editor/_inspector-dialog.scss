@@ -1,38 +1,38 @@
-.wm-inspector-dialog-selector {
+.wm-inspector-dialog {
 	background: transparentize(#333, 0.1);
 	box-shadow: 0 0 10px transparentize(#000, 0.5);
-	display: none;
+	display: block;
 	position: absolute;
 	right: 0;
 	top: 0;
-	width: 200px;
+	max-width: 100%;
+	min-width: 200px;
 	z-index: 1;
 
-	&.-wm-showing {
-		display: block;
-	}
-
-	> .wm-inspector-dialog-selector-header {
+	> .wm-inspector-dialog-header {
 		padding: 5px;
 		text-transform: uppercase;
 		user-select: none;
 	}
 
-	> .wm-inspector-dialog-selector-list {
+	> .wm-inspector-dialog-list {
+		background: transparentize(black, 0.75);
+		display: block;
 		list-style: none;
 		margin: 0;
-		max-height: 200px;
+		max-height: calc(100% - #{$height-header-inspector});
 		padding: 0;
+		position: relative;
 		overflow: auto;
 
 		> li {
-			background: transparentize(black, 0.75);
 			cursor: pointer;
+			display: block;
 			padding: 12px 10px;
 
 			&:active,
 			&:hover {
-				background: transparentize(black, 0.5);
+				background: transparentize(black, 0.25);
 			}
 		}
 	}
