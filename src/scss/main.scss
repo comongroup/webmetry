@@ -70,6 +70,7 @@ body {
 			&.-wmfl-title {
 				margin-right: auto;
 				padding: 10px 5px;
+				padding-left: 0;
 				pointer-events: none;
 
 				&:first-child {
@@ -87,7 +88,7 @@ body {
 
 		&:not(:hover) {
 			.-wmfl-on-hover {
-				display: none;
+				visibility: hidden;
 			}
 		}
 	}

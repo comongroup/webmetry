@@ -1,5 +1,6 @@
 import defaultsDeep from 'lodash/defaultsDeep';
 import mapValues from 'lodash/mapValues';
+import pickBy from 'lodash/pickBy';
 import diffObject from '../utils/diffObject';
 import Emitter from '../utils/Emitter';
 import observeObject from '../utils/observeObject';
@@ -19,7 +20,7 @@ export default class Component extends Emitter {
 
 		// state
 		const state = defaultsDeep(options || {}, mapValues(this.props, o => o.default || undefined));
-		this.serialize = () => this.internalSerialize(state);
+		this.serialize = delta => this.internalSerialize(state, delta);
 		this.unserialize = data => this.internalUnserialize(state, data);
 
 		// observe state
@@ -35,10 +36,14 @@ export default class Component extends Emitter {
 	rendered(dom) {}
 	mounted(dom) {}
 	unmounted(dom) {}
-	internalSerialize(state) {
-		// for now, just return the state as it is,
-		// but make a shallow copy of it
-		return { ...state };
+	internalSerialize(state, delta) {
+		// return the state of the object,
+		// but filter out keys that are not props,
+		// or values that equal the default (if delta == true)
+		return pickBy(state, (v, k) => {
+			const prop = this.props[k];
+			return prop && !prop.omit && (delta !== true || prop.default !== v);
+		});
 	}
 	internalUnserialize(state, data) {
 		const diff = diffObject(state, data);

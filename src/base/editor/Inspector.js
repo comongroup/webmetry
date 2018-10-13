@@ -1,4 +1,5 @@
 import debounce from 'lodash/debounce';
+import find from 'lodash/find';
 import map from 'lodash/map';
 import DialogHandler from './DialogHandler';
 import PropertyList from '../../elements/editor/PropertyList';
@@ -45,29 +46,26 @@ export default class Inspector extends DialogHandler {
 			propList.on('change:expanded', () => {
 				this.moveContainerWithinBounds();
 			});
-			propList.on('change:visible', visible => {
-				component.__internalInstance.dom.classList.toggle('-wm-invisible', !visible);
-			});
-			propList.on('check:resize', (width, height) => {
-				propList.state.visible = shouldComponentBeVisible(component, width, height);
+			propList.on('change:visible', () => {
+				const responsiveVisible = shouldComponentBeVisible(component, window.innerWidth, window.innerHeight);
+				const shouldBeVisible = propList.state.visible === 1 || (propList.state.visible === 2 && responsiveVisible);
+				component.__internalInstance.dom.classList.toggle('-wm-invisible', !shouldBeVisible);
 			});
 			propList.on('trash', () => {
 				if (confirm(`Remove this component?`)) {
-					this.handler.remove(propList.state.target);
+					this.handler.remove(component);
 				}
 			});
 			this.add(propList);
 			this.moveContainerWithinBounds();
 			// TODO: need to refactor all of this below
-			const nameHandler = debounce(() => {
+			bindNameEventsTo(component, debounce(() => {
 				propList.emit('change');
-			}, 500);
-			const responsiveHandler = debounce(() => {
-				this.makePropListCheckResize(propList);
-			}, 200);
-			bindNameEventsTo(component, nameHandler);
-			bindResponsiveEventsTo(component, responsiveHandler);
-			responsiveHandler();
+			}, 500));
+			bindResponsiveEventsTo(component, debounce(() => {
+				propList.emit('change:visible');
+			}, 200));
+			propList.emit('change:visible');
 			// TODO: need to refactor all of this above
 		});
 		this.handler.on('remove', components => {
@@ -75,13 +73,10 @@ export default class Inspector extends DialogHandler {
 				const component = components[i];
 				unbindNameEventsFrom(component);
 				unbindResponsiveEventsFrom(component);
-				for (let j = 0; j < this.components.length; j++) {
-					const propList = this.components[j];
-					if (propList.state.target && propList.state.target === component) {
-						this.remove(propList);
-						this.moveContainerWithinBounds();
-						break;
-					}
+				const propList = this.findCorrespondingPropList(component);
+				if (propList) {
+					this.remove(propList);
+					this.moveContainerWithinBounds();
 				}
 			}
 		});
@@ -96,11 +91,13 @@ export default class Inspector extends DialogHandler {
 
 		// on resize?
 		this.onResize = debounce(this.onResize.bind(this), 500);
-		this.onResize();
 		window.addEventListener('resize', this.onResize);
 
 		// append the inspector to its place
 		parent.appendChild(this.container);
+	}
+	findCorrespondingPropList(target) {
+		return find(this.components, propList => propList.state.target && propList.state.target === target);
 	}
 	onResize() {
 		this.moveContainerWithinBounds();
@@ -112,13 +109,8 @@ export default class Inspector extends DialogHandler {
 
 		// make every propList evaluate itself
 		this.components.forEach(component => {
-			component.emit('check:resize', windowWidth, windowHeight);
+			component.emit('change:visible');
 		});
-	}
-	makePropListCheckResize(propList) {
-		const windowWidth = window.innerWidth;
-		const windowHeight = window.innerHeight;
-		propList.emit('check:resize', windowWidth, windowHeight);
 	}
 	setContainerPosition(x, y) {
 		this.container.style.left = x + 'px';
@@ -175,7 +167,7 @@ export default class Inspector extends DialogHandler {
 			]
 		}).on('select', ({ action, source }) => {
 			if (action === 'import') {
-				const input = prompt('Paste the JSON here.\nThis will clear current components.');
+				const input = prompt('Paste the JSON here.\nThis will replace all current components.');
 				if (input) {
 					try {
 						const arr = JSON.parse(input);
@@ -192,7 +184,14 @@ export default class Inspector extends DialogHandler {
 									console.warn(`component ${entry} not found`);
 								}
 								else {
-									this.handler.add(new entry.Constructor(obj.options), obj.type);
+									const component = new entry.Constructor(obj.options || {});
+									this.handler.add(component, obj.type);
+									if (obj.list) {
+										const propList = this.findCorrespondingPropList(component);
+										if (propList) {
+											Object.assign(propList.state, obj.list || {});
+										}
+									}
 								}
 							});
 						}
@@ -209,10 +208,16 @@ export default class Inspector extends DialogHandler {
 				}
 			}
 			else if (action === 'export' && source === 'json') {
-				const arr = map(this.handler.components, c => ({
-					type: c.__internalId,
-					options: c.serialize()
-				}));
+				const arr = map(this.handler.components, component => {
+					const optionsObject = component.serialize(true);
+					const list = this.findCorrespondingPropList(component);
+					const listObject = list ? list.serialize(true) : {};
+					return {
+						type: component.__internalId,
+						options: optionsObject,
+						list: listObject
+					};
+				});
 				const output = JSON.stringify(arr, null, '\t');
 				prompt('Here is the JSON code', output);
 			}

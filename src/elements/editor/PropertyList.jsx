@@ -5,9 +5,9 @@ import renderPropEditor from '../../utils/editor/renderPropEditor';
 export default class PropertyList extends Component {
 	constructor(options) {
 		super(options, {
-			target: { type: Component },
-			visible: { type: Boolean, default: true },
-			expanded: { type: Boolean, default: true }
+			target: { type: Component, omit: true },
+			expanded: { type: Boolean, default: true },
+			visible: { type: Number, default: 2 }
 		});
 	}
 	render() {
@@ -38,11 +38,17 @@ export default class PropertyList extends Component {
 						: <i className="material-icons">keyboard_arrow_down</i>}
 				</span>
 				<span className="-wmfl-title">{target.getName()}</span>
-				<span className="-wmfl-option -wmfl-on-hover" title="Delete component" onClick={e => this.deleteTarget(e)}>
+				<span className="-wmfl-option -wmfl-on-hover" title="Delete component" onClick={e => this.trashTarget(e)}>
 					<i className="material-icons">delete_outline</i>
 				</span>
-				<span className="-wmfl-option" title="Toggle visibility" onClick={e => this.toggleTargetVisibility(e)}>
-					<i className="material-icons">{this.state.visible === false ? 'visibility_off' : 'visibility'}</i>
+				<span className="-wmfl-option" title="Toggle visibility mode" onClick={e => this.toggleVisibilityMode(e)}>
+					<i className="material-icons">
+						{this.state.visible === 0
+							? 'flash_off'
+							: this.state.visible === 1
+								? 'flash_on'
+								: 'flash_auto'}
+					</i>
 				</span>
 			</div>
 			<div className="wm-property-list-props">{children}</div>
@@ -76,13 +82,14 @@ export default class PropertyList extends Component {
 		this.emit('input', target, prop, convertedValue);
 	}
 	toggleExpandedState(e) {
+		e.stopPropagation();
 		this.state.expanded = !this.state.expanded;
 	}
-	toggleTargetVisibility(e) {
+	toggleVisibilityMode(e) {
 		e.stopPropagation();
-		this.state.visible = !this.state.visible;
+		this.state.visible = (this.state.visible + 1) % 3;
 	}
-	deleteTarget(e) {
+	trashTarget(e) {
 		e.stopPropagation();
 		this.emit('trash');
 	}
