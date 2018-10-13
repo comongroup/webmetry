@@ -52,6 +52,9 @@ export default class ComponentHandler extends Emitter {
 		}
 		return component;
 	}
+	empty() {
+		[ ...this.components ].forEach(c => this.remove(c));
+	}
 	render(component) {
 		if (component.__internalInstance) {
 			const prevInstance = component.__internalInstance;
