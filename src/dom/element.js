@@ -1,4 +1,4 @@
-import { flattenDeep } from 'lodash';
+import flattenDeep from 'lodash/flattenDeep';
 
 // export text element constant used by JSX
 export const TEXT_ELEMENT = 'TEXT ELEMENT';

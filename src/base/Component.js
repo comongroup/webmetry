@@ -1,4 +1,5 @@
-import { defaultsDeep, mapValues } from 'lodash';
+import defaultsDeep from 'lodash/defaultsDeep';
+import mapValues from 'lodash/mapValues';
 import diffObject from '../utils/diffObject';
 import Emitter from '../utils/Emitter';
 import observeObject from '../utils/observeObject';

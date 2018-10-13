@@ -1,4 +1,4 @@
-import { map } from 'lodash';
+import map from 'lodash/map';
 import Component from '../../base/Component';
 
 export default class InspectorHeader extends Component {

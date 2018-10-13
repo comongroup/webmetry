@@ -1,4 +1,4 @@
-import { camelCase } from 'lodash';
+import camelCase from 'lodash/camelCase';
 import Component from '../../base/Component';
 import renderPropEditor from '../../utils/editor/renderPropEditor';
 

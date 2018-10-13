@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import DialogHandler from './DialogHandler';
 import PropertyList from '../../elements/editor/PropertyList';
 import InspectorHeader from '../../elements/editor/InspectorHeader';

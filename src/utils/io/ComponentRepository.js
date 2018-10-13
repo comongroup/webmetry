@@ -1,4 +1,4 @@
-import { map } from 'lodash';
+import map from 'lodash/map';
 
 export default class ComponentRepository {
 	constructor() {
