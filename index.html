@@ -19,22 +19,31 @@
 <body>
 	<script>
 		window.wmConfig = {
-			components: [{
-				"type": "ColumnGrid",
-				"options": {
-					"nameOverride": "Preset column grid via config",
-					"columnNumber": 10,
-					"columnColorEven": "#ff0000",
-					"columnColorOdd": "#00ff00",
-					"maxWidth": "1024px",
-					"showGutters": false,
-					"widthRangeMax": 800
+			components: [
+				{
+					"type": "ColumnGrid",
+					"options": {
+						"nameOverride": "Grid <= 800",
+						"columnColorEven": "#ff0000",
+						"columnColorOdd": "#00ff00",
+						"showGutters": false,
+						"widthRangeMax": 800
+					},
+					"list": {
+						"expanded": false
+					}
 				},
-				"list": {
-					"expanded": false,
-					"visible": 1
+				{
+					"type": "ColumnGrid",
+					"options": {
+						"nameOverride": "Grid >= 801",
+						"widthRangeMin": 801
+					},
+					"list": {
+						"expanded": false
+					}
 				}
-			}]
+			]
 		};
 	</script>
 	<script type="text/javascript" src="./dist/webmetry.min.js" defer></script>

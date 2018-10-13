@@ -15,5 +15,5 @@ export function getJSONFromInspector(inspector, spacer) {
 }
 
 export default function exportJSONFromInspector(inspector) {
-	prompt('JSON output:', getJSONFromInspector(inspector));
+	prompt('JSON output:', getJSONFromInspector(inspector, '\t'));
 }

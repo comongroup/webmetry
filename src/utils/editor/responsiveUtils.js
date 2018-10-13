@@ -4,6 +4,7 @@ export function responsiveProps() {
 	const common = {
 		type: Number,
 		hidden: true,
+		default: null,
 		filter: value => convertEmptyToNull(value, Number)
 	};
 	return {
@@ -46,4 +47,14 @@ export function unbindResponsiveEventsFrom(component) {
 	component.off('change:widthRangeMax');
 	component.off('change:heightRangeMin');
 	component.off('change:heightRangeMax');
+}
+
+export function hasAnyResponsivePropsFilled(component) {
+	const state = component.state;
+	return (
+		state.widthRangeMin ||
+		state.widthRangeMax ||
+		state.heightRangeMin ||
+		state.heightRangeMax
+	);
 }

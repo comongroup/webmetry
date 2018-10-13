@@ -13,7 +13,7 @@ body {
 	position: static;
 
 	* {
-		box-sizing: border-box;
+		box-sizing: border-box !important;
 	}
 
 	@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
@@ -43,8 +43,8 @@ body {
 
 	input, select, textarea {
 		display: block;
-		font-family: inherit;
-		font-size: inherit;
+		font-family: inherit !important;
+		font-size: inherit !important;
 		margin: 0;
 		padding: 0;
 	}
@@ -54,17 +54,12 @@ body {
 		align-items: center;
 		justify-content: flex-start;
 
-		> span[class^="-wmfl"] {
+		> [class^="-wmfl"] {
 			display: block;
 
 			&.-wmfl-option {
 				color: transparentize(#fff, 0.5);
-				cursor: pointer;
 				padding: 10px 5px;
-
-				&:hover {
-					color: #fff;
-				}
 			}
 
 			&.-wmfl-title {
@@ -83,6 +78,18 @@ body {
 				padding: 10px 5px;
 				pointer-events: none;
 				text-transform: none;
+			}
+		}
+
+		> .-wmfl-option {
+			cursor: default;
+		}
+
+		> a[class^="-wmfl"] {
+			cursor: pointer;
+
+			&:hover {
+				color: #fff;
 			}
 		}
 

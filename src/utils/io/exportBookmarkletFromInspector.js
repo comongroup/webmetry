@@ -1,8 +1,10 @@
 import { getJSONFromInspector } from './exportJSONFromInspector';
 
 export default function exportBookmarkletFromInspector(inspector) {
-	const json = getJSONFromInspector(inspector, null);
+	// get URL for file, and JSON from inspector,
+	// but remove quotes from JSON keys to reduce string length
 	const url = 'https://luisjs.io/webmetry.min.js';
+	const json = getJSONFromInspector(inspector, null).replace(/"([^(")"]+)":/g, '$1:');
 
 	// code parts
 	const config = json !== '[]' ? `window.wmConfig={components:${json}};` : '';

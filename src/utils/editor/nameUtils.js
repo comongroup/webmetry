@@ -5,6 +5,7 @@ export function nameProps(placeholder) {
 		nameOverride: {
 			type: String,
 			label: 'Name',
+			default: '',
 			placeholder
 		}
 	};
