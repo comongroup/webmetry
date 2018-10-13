@@ -1,7 +1,7 @@
 import ComponentHandler from './src/base/ComponentHandler';
 import Inspector from './src/base/editor/Inspector';
 import bindComponents from './src/bindComponents';
-import { repo } from './src/utils/io';
+import { mapIO, performInspectorIO, repo } from './src/utils/io';
 import './src/scss/main.scss';
 
 // add components to repo first
@@ -16,3 +16,8 @@ document.body.appendChild(wmElement);
 const handler = new ComponentHandler(wmElement);
 const inspector = new Inspector(wmElement, handler);
 window.wmInstance = { handler, inspector };
+
+// import config
+if (window.wmConfig) {
+	performInspectorIO(inspector, mapIO('import', 'config', { config: window.wmConfig }));
+}

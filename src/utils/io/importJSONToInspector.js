@@ -1,7 +1,7 @@
 import map from 'lodash/map';
 
 export default function importJSONToInspector(inspector, repo) {
-	let result = [];
+	const result = [];
 	const input = prompt('Paste the JSON here.\nThis will replace all current components.') || '[]';
 
 	try {
@@ -29,7 +29,7 @@ export default function importJSONToInspector(inspector, repo) {
 			console.error(e);
 		}
 		if (e.message) {
-			alert('JSON triggered an error:\n' + e.message);
+			alert('Webmetry JSON triggered an error:\n' + e.message);
 		}
 	}
 

@@ -1,6 +1,6 @@
 import map from 'lodash/map';
 
-export default function exportJSONFromInspector(inspector) {
+export function getJSONFromInspector(inspector, spacer) {
 	const arr = map(inspector.handler.components, component => {
 		const optionsObject = component.serialize(true);
 		const list = inspector.findCorrespondingPropList(component);
@@ -11,6 +11,9 @@ export default function exportJSONFromInspector(inspector) {
 			list: listObject
 		};
 	});
-	const output = JSON.stringify(arr);
-	prompt('JSON output:', output);
+	return JSON.stringify(arr, null, spacer || null);
+}
+
+export default function exportJSONFromInspector(inspector) {
+	prompt('JSON output:', getJSONFromInspector(inspector));
 }
