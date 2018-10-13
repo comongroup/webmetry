@@ -10,7 +10,7 @@ export default class DialogHandler extends ComponentHandler {
 		dialog.on('close', handler);
 		this.add(dialog);
 		setTimeout(() => {
-			dialog.hideCallback = outsideElementCallback(dialog.instance.dom, handler);
+			dialog.hideCallback = outsideElementCallback(dialog.__internalInstance.dom, handler);
 			document.addEventListener('click', dialog.hideCallback);
 		}, 1);
 		return dialog;

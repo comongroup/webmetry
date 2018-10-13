@@ -1,4 +1,5 @@
 import debounce from 'lodash/debounce';
+import map from 'lodash/map';
 import DialogHandler from './DialogHandler';
 import PropertyList from '../../elements/editor/PropertyList';
 import InspectorHeader from '../../elements/editor/InspectorHeader';
@@ -45,7 +46,7 @@ export default class Inspector extends DialogHandler {
 				this.moveContainerWithinBounds();
 			});
 			propList.on('change:visible', visible => {
-				component.instance.dom.classList.toggle('-wm-invisible', !visible);
+				component.__internalInstance.dom.classList.toggle('-wm-invisible', !visible);
 			});
 			propList.on('check:resize', (width, height) => {
 				propList.state.visible = shouldComponentBeVisible(component, width, height);
@@ -86,7 +87,7 @@ export default class Inspector extends DialogHandler {
 		});
 
 		// move header and selector, and add list
-		this.container.appendChild(this.header.instance.dom);
+		this.container.appendChild(this.header.__internalInstance.dom);
 		this.container.appendChild(inside);
 
 		// set container position
@@ -157,17 +158,54 @@ export default class Inspector extends DialogHandler {
 		this.spawnDialog({
 			title: 'Add component...',
 			items: repo.getList()
-		}).on('select', component => {
-			this.handler.add(new component()); // eslint-disable-line new-cap
+		}).on('select', ({ id, Constructor }) => {
+			const instance = new Constructor();
+			this.handler.add(instance, id);
 		});
 	}
 	spawnImportExportDialog() {
+		// TODO: transform these into proper redirects
+		const objImport = source => ({ action: 'import', source });
+		const objExport = source => ({ action: 'export', source });
+
 		this.spawnDialog({
 			title: 'Import/export...',
 			items: [
-				{ title: renderIcon('redo', 'Import from JSON') },
-				{ title: renderIcon('undo', 'Export as JSON') }
+				{ title: renderIcon('redo', 'Import from JSON'), ...objImport('json') },
+				{ title: renderIcon('undo', 'Export as JSON'), ...objExport('json') }
 			]
+		}).on('select', ({ action, source }) => {
+			if (action === 'import') {
+				const input = prompt('Paste the JSON here.\nThis will clear current components.');
+				if (input) {
+					try {
+						const arr = JSON.parse(input);
+						if (arr instanceof Array) {
+							// TODO:
+							// * clear whole current array
+							// * import components from json
+							console.log(arr);
+						}
+						else {
+							throw new Error('JSON is not a valid Webmetry array');
+						}
+					}
+					catch (e) {
+						console.error(e);
+						if (e.message) {
+							alert('JSON triggered an error:\n' + e.message);
+						}
+					}
+				}
+			}
+			else if (action === 'export' && source === 'json') {
+				const arr = map(this.handler.components, c => ({
+					type: c.__internalId,
+					options: c.serialize()
+				}));
+				const output = JSON.stringify(arr, null, '\t');
+				prompt('Here is the JSON code', output);
+			}
 		});
 	}
 }

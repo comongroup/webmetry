@@ -29,7 +29,6 @@ export function reconcile(parentDom, currentInstance, nextElement) {
 	else {
 		// update composite instance
 		// https://github.com/pomber/didact/blob/2e290ff5c486b8a3f361abcbc6e36e2c21db30b8/src/reconciler.js#L36
-		console.log('oops?');
 	}
 }
 

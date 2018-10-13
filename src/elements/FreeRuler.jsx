@@ -29,7 +29,7 @@ export default class FreeRuler extends Component {
 			angle: { type: Boolean, default: true },
 			distance: { type: Boolean, default: true },
 			...responsiveProps()
-		}, renderIcon('straighten', 'Free Ruler'));
+		}, renderIcon('straighten', 'FreeRuler'));
 	}
 	render() {
 		const hdlStyle = {

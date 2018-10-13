@@ -8,10 +8,11 @@ export default class ComponentRepository {
 		this.entries[key] = { title, ctor };
 	}
 	getList() {
-		return map(this.entries, entry => {
+		return map(this.entries, (entry, key) => {
 			return {
+				id: key,
 				title: entry.title,
-				result: entry.ctor
+				Constructor: entry.ctor
 			};
 		});
 	}
