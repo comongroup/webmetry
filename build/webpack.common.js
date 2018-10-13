@@ -1,5 +1,5 @@
 const path = require('path');
-const pkg = require('./package.json');
+const pkg = require('../package.json');
 const webpack = require('webpack');
 
 const resolve = function(dir) {
@@ -18,7 +18,7 @@ module.exports = {
 	},
 
 	output: {
-		path: resolve('dist'),
+		path: resolve('../dist'),
 		filename: '[name].min.js'
 	},
 
@@ -26,7 +26,7 @@ module.exports = {
 		rules: [
 
 			{
-				test: /\.(js)$/,
+				test: /\.jsx?$/,
 				use: 'eslint-loader',
 				enforce: 'pre'
 			},
@@ -54,36 +54,27 @@ module.exports = {
 					},
 					{ loader: 'sass-loader' }
 				]
-			},
-
-			{
-				test: /\.html$/,
-				exclude: /node_modules/,
-				use: {
-					loader: 'html-loader',
-					options: {
-						attrs: [':src', ':data-src', 'object:data']
-					}
-				}
 			}
 
 		]
 	},
 
 	plugins: [
-		new CleanWebpackPlugin([ resolve('dist') ]),
+		new CleanWebpackPlugin([ resolve('../dist') ], {
+			root: resolve('../')
+		}),
 		new webpack.BannerPlugin({
 			banner: `[name]@${pkg.version}\nhash:[hash]`
 		}),
 		new webpack.ProvidePlugin({
-			dom: resolve('src/dom.js')
+			dom: resolve('../src/dom.js')
 		})
 	],
 
 	resolve: {
 		extensions: [ '.js', '.jsx', '.json', '.scss' ],
 		alias: {
-			'src': resolve('src')
+			'src': resolve('../src')
 		}
 	}
 

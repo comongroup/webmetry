@@ -1,19 +1,10 @@
 {
-	"env": {
-		"test": {
-			"presets": [
-				["env", { "targets": { "node": "current" } }]
-			]
-		}
-	},
 	"plugins": [
-		"lodash",
-		["transform-react-jsx", {
+		["@babel/plugin-transform-react-jsx", {
 			"pragma": "dom.createElement"
 		}]
 	],
 	"presets": [
-		"env",
-		"stage-3"
+		"@babel/env"
 	]
 }
