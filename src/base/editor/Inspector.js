@@ -158,9 +158,8 @@ export default class Inspector extends DialogHandler {
 		this.spawnDialog({
 			title: 'Add component...',
 			items: repo.getList()
-		}).on('select', ({ id, Constructor }) => {
-			const instance = new Constructor();
-			this.handler.add(instance, id);
+		}).on('select', ({ key, Constructor }) => {
+			this.handler.add(new Constructor(), key);
 		});
 	}
 	spawnImportExportDialog() {
@@ -181,10 +180,21 @@ export default class Inspector extends DialogHandler {
 					try {
 						const arr = JSON.parse(input);
 						if (arr instanceof Array) {
-							// TODO:
-							// * clear whole current array
-							// * import components from json
-							console.log(arr);
+							// TODO: maybe confirm() with component count summary before deleting?
+
+							[ ...this.handler.components ].forEach(c => {
+								this.handler.remove(c);
+							});
+
+							arr.forEach(obj => {
+								const entry = repo.grab(obj.type);
+								if (!entry) {
+									console.warn(`component ${entry} not found`);
+								}
+								else {
+									this.handler.add(new entry.Constructor(obj.options), obj.type);
+								}
+							});
 						}
 						else {
 							throw new Error('JSON is not a valid Webmetry array');

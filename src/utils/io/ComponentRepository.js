@@ -4,15 +4,17 @@ export default class ComponentRepository {
 	constructor() {
 		this.entries = {};
 	}
-	register(key, title, ctor) {
-		this.entries[key] = { title, ctor };
+	register(key, title, Constructor) {
+		this.entries[key] = { title, Constructor };
+	}
+	grab(key) {
+		return this.entries[key];
 	}
 	getList() {
 		return map(this.entries, (entry, key) => {
 			return {
-				id: key,
-				title: entry.title,
-				Constructor: entry.ctor
+				key: key,
+				...entry
 			};
 		});
 	}
