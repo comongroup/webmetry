@@ -8,6 +8,6 @@ import FreeRuler from './elements/FreeRuler';
 
 export default function bindComponents(repo) {
 	repo.register('ColumnGrid', renderIcon('view_column', 'ColumnGrid'), ColumnGrid);
-	repo.register('LineGrid', renderIcon('view_headline', 'LineGrid'), LineGrid);
+	repo.register('LineGrid', renderIcon('grid_on', 'LineGrid'), LineGrid);
 	repo.register('FreeRuler', renderIcon('straighten', 'FreeRuler'), FreeRuler);
 }

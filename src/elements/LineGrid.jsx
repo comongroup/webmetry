@@ -15,7 +15,7 @@ export default class LineGrid extends Component {
 			verticalLineColor: { type: String, default: '#FFFFFF', picker: 'color' },
 			fixed: { type: Boolean, default: true, header: 'Behaviour' },
 			...responsiveProps()
-		}, renderComponentNameWithIcon('view_headline', 'LineGrid'));
+		}, renderComponentNameWithIcon('grid_on', 'LineGrid'));
 	}
 	render() {
 		let containerClasses = 'wm-line-grid';
