@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 
 // URL for file embeds
@@ -37,17 +38,29 @@ export function exportJSON(inspector) {
 }
 
 export function getConfig(inspector) {
-	const obj = {};
+	const obj = {
+		inspector: {
+			x: inspector.x,
+			y: inspector.y,
+			snappedToBottom: inspector.snappedToBottom
+		}
+	};
 	if (inspector.handler.components.length > 0) {
 		obj.components = map(inspector.handler.components, component => {
-			const optionsObject = component.serialize(true);
+			const obj = {
+				type: component.__internalId
+			};
 			const list = inspector.findCorrespondingPropList(component);
 			const listObject = list ? list.serialize(true) : {};
-			return {
-				type: component.__internalId,
-				options: optionsObject,
-				list: listObject
-			};
+			const optionsObject = component.serialize(true);
+			console.log(obj.type, optionsObject, listObject);
+			if (!isEmpty(optionsObject)) {
+				obj.options = optionsObject;
+			}
+			if (!isEmpty(listObject)) {
+				obj.list = listObject;
+			}
+			return obj;
 		});
 	}
 	return obj;
@@ -60,6 +73,7 @@ export function getJSON(inspector, spacer) {
 export function importConfig(inspector, repo, io) {
 	const config = io.config;
 	const componentsToAdd = [];
+	const inspectorProps = {};
 	let stop = false;
 
 	try {
@@ -67,10 +81,22 @@ export function importConfig(inspector, repo, io) {
 			throw new Error('JSON is not a valid Webmetry object');
 		}
 
-		// check if components exists and is not an array
+		// check if inspectors object exists and is not an object
+		if (config.inspector) {
+			if (typeof config.inspector !== 'object' || config.inspector instanceof Array) {
+				throw new Error('JSON does not have a valid "inspector" object');
+			}
+
+			// analyse properties in config
+			inspectorProps.x = parseFloat(config.inspector.x) || 0;
+			inspectorProps.y = parseFloat(config.inspector.y) || 0;
+			inspectorProps.snappedToBottom = Boolean(config.inspector.snappedToBottom) || false;
+		}
+
+		// check if components object exists and is not an array
 		if (config.components) {
 			if (!(config.components instanceof Array)) {
-				throw new Error('JSON does not have a valid component array');
+				throw new Error('JSON does not have a valid "components" array');
 			}
 
 			// analyse components in config
@@ -114,6 +140,13 @@ export function importConfig(inspector, repo, io) {
 					Object.assign(propList.state, obj.list || {});
 				}
 			});
+		}
+
+		// change inspector properties
+		if (inspectorProps) {
+			inspector.snappedToBottom = inspectorProps.snappedToBottom;
+			inspector.setContainerPosition(inspectorProps.x, inspectorProps.y);
+			inspector.moveContainerWithinBounds();
 		}
 	}
 }

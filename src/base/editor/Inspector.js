@@ -97,6 +97,7 @@ export default class Inspector extends DialogHandler {
 		this.container.appendChild(inside);
 
 		// set container position
+		this.snappedToBottom = false;
 		this.setContainerPosition(0, 0);
 		this.moveContainerWithinBounds();
 
@@ -124,6 +125,8 @@ export default class Inspector extends DialogHandler {
 		});
 	}
 	setContainerPosition(x, y) {
+		this.x = x;
+		this.y = y;
 		this.container.style.left = x + 'px';
 		this.container.style.top = y + 'px';
 	}
@@ -171,8 +174,8 @@ export default class Inspector extends DialogHandler {
 			items: [
 				{ title: renderIcon('code', 'Config JSON'), ...mapIO('import', 'json'), header: 'Import' },
 				{ title: renderIcon('code', 'Config JSON'), ...mapIO('export', 'json'), header: 'Export' },
-				{ title: renderIcon('link', 'Bookmarklet'), ...mapIO('export', 'bookmarklet') },
-				{ title: renderIcon('important_devices', 'HTML Embed'), ...mapIO('export', 'embed') }
+				{ title: renderIcon('settings_ethernet', 'HTML Embed'), ...mapIO('export', 'embed') },
+				{ title: renderIcon('link', 'Bookmarklet'), ...mapIO('export', 'bookmarklet') }
 			]
 		}).on('select', io => performInspectorIO(this, io));
 	}

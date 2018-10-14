@@ -4,7 +4,6 @@ export function responsiveProps() {
 	const common = {
 		type: Number,
 		hidden: true,
-		default: null,
 		filter: value => convertEmptyToNull(value, Number)
 	};
 	return {
