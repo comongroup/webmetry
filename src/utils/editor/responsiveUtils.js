@@ -47,3 +47,13 @@ export function unbindResponsiveEventsFrom(component) {
 	component.off('change:heightRangeMin');
 	component.off('change:heightRangeMax');
 }
+
+export function hasAnyResponsivePropsFilled(component) {
+	const state = component.state;
+	return (
+		state.widthRangeMin ||
+		state.widthRangeMax ||
+		state.heightRangeMin ||
+		state.heightRangeMax
+	);
+}

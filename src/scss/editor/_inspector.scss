@@ -11,10 +11,32 @@
 		opacity: 1;
 	}
 
+	.wm-inspector-hint {
+		color: transparentize(#fff, 0.5);
+		display: block;
+		left: 50%;
+		position: absolute;
+		max-height: 95%;
+		max-width: 95%;
+		pointer-events: none;
+		text-align: center;
+		top: calc(50% + #{$height-header-inspector / 2});
+		transform: translate(-50%, -50%);
+		width: 100%;
+
+		b {
+			display: block;
+			font-size: 1.5em;
+			font-weight: normal;
+			margin-bottom: 10px;
+		}
+	}
+
 	.wm-inspector-inside {
 		max-height: calc(100vh - #{$height-header-inspector});
 		min-height: $height-list-inspector;
-		overflow: auto;
+		overflow-x: hidden;
+		overflow-y: auto;
 	}
 
 	@import 'inspector-header';

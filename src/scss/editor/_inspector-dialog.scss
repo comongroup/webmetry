@@ -1,5 +1,5 @@
 .wm-inspector-dialog {
-	background: transparentize(#333, 0.1);
+	background: transparentize(#333, 0.05);
 	box-shadow: 0 0 10px transparentize(#000, 0.5);
 	display: block;
 	position: absolute;
@@ -26,13 +26,24 @@
 		overflow: auto;
 
 		> li {
-			cursor: pointer;
 			display: block;
-			padding: 12px 10px;
 
-			&:active,
-			&:hover {
-				background: transparentize(black, 0.25);
+			&.wm-inspector-dialog-list-header {
+				font-weight: bold;
+				opacity: 0.65;
+				padding: 12px 10px 5px;
+				text-transform: uppercase;
+			}
+
+			a {
+				cursor: pointer;
+				display: block;
+				padding: 12px 10px;
+
+				&:active,
+				&:hover {
+					background: transparentize(black, 0.25);
+				}
 			}
 		}
 	}

@@ -19,6 +19,11 @@ export default class Inspector extends DialogHandler {
 		this.container = document.createElement('div');
 		this.container.className = 'wm-inspector';
 
+		// create hint element
+		this.hint = document.createElement('div');
+		this.hint.className = 'wm-inspector-hint';
+		this.hint.innerHTML = '<b>No components.</b>Start by adding one above...';
+
 		// add inspector header
 		this.header = this.add(new InspectorHeader({
 			title: 'Webmetry',
@@ -49,12 +54,14 @@ export default class Inspector extends DialogHandler {
 				const responsiveVisible = shouldComponentBeVisible(component, window.innerWidth, window.innerHeight);
 				const shouldBeVisible = propList.state.visible === 1 || (propList.state.visible === 2 && responsiveVisible);
 				component.__internalInstance.dom.classList.toggle('-wm-invisible', !shouldBeVisible);
+				propList.state.responsiveVisible = responsiveVisible; // update value and re-render
 			});
 			propList.on('trash', () => {
 				if (confirm(`Remove this component?`)) {
 					this.handler.remove(component);
 				}
 			});
+			this.hint.classList.add('-wm-invisible');
 			this.add(propList);
 			this.moveContainerWithinBounds();
 			// TODO: need to refactor all of this below
@@ -62,6 +69,7 @@ export default class Inspector extends DialogHandler {
 				propList.emit('change');
 			}, 500));
 			bindResponsiveEventsTo(component, debounce(() => {
+				propList.emit('change');
 				propList.emit('change:visible');
 			}, 200));
 			propList.emit('change:visible');
@@ -78,13 +86,18 @@ export default class Inspector extends DialogHandler {
 					this.moveContainerWithinBounds();
 				}
 			}
+			if (this.handler.components.length < 1) {
+				this.hint.classList.remove('-wm-invisible');
+			}
 		});
 
 		// move header and selector, and add list
 		this.container.appendChild(this.header.__internalInstance.dom);
+		this.container.appendChild(this.hint);
 		this.container.appendChild(inside);
 
 		// set container position
+		this.snappedToBottom = false;
 		this.setContainerPosition(0, 0);
 		this.moveContainerWithinBounds();
 
@@ -112,6 +125,8 @@ export default class Inspector extends DialogHandler {
 		});
 	}
 	setContainerPosition(x, y) {
+		this.x = x;
+		this.y = y;
 		this.container.style.left = x + 'px';
 		this.container.style.top = y + 'px';
 	}
@@ -157,9 +172,10 @@ export default class Inspector extends DialogHandler {
 		this.spawnDialog({
 			title: 'Import/export...',
 			items: [
-				{ title: renderIcon('code', 'Import from JSON'), ...mapIO('import', 'json') },
-				{ title: renderIcon('code', 'Export as JSON'), ...mapIO('export', 'json') },
-				{ title: renderIcon('link', 'Export as Bookmarklet'), ...mapIO('export', 'bookmarklet') }
+				{ title: renderIcon('code', 'Config JSON'), ...mapIO('import', 'json'), header: 'Import' },
+				{ title: renderIcon('code', 'Config JSON'), ...mapIO('export', 'json'), header: 'Export' },
+				{ title: renderIcon('settings_ethernet', 'HTML Embed'), ...mapIO('export', 'embed') },
+				{ title: renderIcon('link', 'Bookmarklet'), ...mapIO('export', 'bookmarklet') }
 			]
 		}).on('select', io => performInspectorIO(this, io));
 	}
