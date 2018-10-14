@@ -1,35 +1,36 @@
 import Component from '../base/Component';
-import renderIcon from '../utils/editor/renderIcon';
+import { nameProps, renderComponentNameWithIcon } from '../utils/editor/nameUtils';
 import { responsiveProps } from '../utils/editor/responsiveUtils';
 
 export default class FreeRuler extends Component {
 	constructor(options) {
 		super(options, {
+			...nameProps('FreeRuler'),
 			gridSize: { type: Number, default: 10, header: 'Main Properties' },
-			axisLength: { type: Number, default: 50 },
-			handlerColor: { type: String, default: '#AA2222', picker: 'color' },
-			rulerColor: { type: String, default: '#FFFFFF', picker: 'color' },
-			orientedAxisColor: { type: String, default: '#FF2222', picker: 'color' },
-			fixedAxisColor: { type: String, default: '#00FF00', picker: 'color' },
-			fixedFullAxisColor: { type: String, default: '#FFFFFF', picker: 'color' },
-			angleColor: { type: String, default: '#FFFFFF', picker: 'color' },
-			distanceColor: { type: String, default: '#FFFFFF', picker: 'color' },
-			rulerOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
-			orientedAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
-			fixedAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
-			fixedFullAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
-			angleOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
-			distanceOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
-			ruler: { type: Boolean, default: true, header: 'Toggles' },
-			handles: { type: Boolean, default: true },
-			orientedAxis: { type: Boolean, default: true },
-			fixedAxis: { type: Boolean, default: false },
-			fixedFullAxis: { type: Boolean, default: true },
 			snapToGrid: { type: Boolean, default: true },
-			angle: { type: Boolean, default: true },
-			distance: { type: Boolean, default: true },
+			axisLength: { type: Number, default: 50 },
+			distance: { type: Boolean, default: true, header: 'Distance Label' },
+			distanceColor: { type: String, default: '#FFFFFF', picker: 'color' },
+			distanceOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
+			angle: { type: Boolean, default: true, header: 'Angle Label' },
+			angleColor: { type: String, default: '#FFFFFF', picker: 'color' },
+			angleOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
+			handles: { type: Boolean, default: true, header: 'Handles' },
+			handlerColor: { type: String, default: '#AA2222', picker: 'color' },
+			ruler: { type: Boolean, default: true, header: 'Ruler' },
+			rulerColor: { type: String, default: '#FFFFFF', picker: 'color' },
+			rulerOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
+			fixedAxis: { type: Boolean, default: false, header: 'Fixed Axis' },
+			fixedAxisColor: { type: String, default: '#00FF00', picker: 'color' },
+			fixedAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
+			orientedAxis: { type: Boolean, default: true, header: 'Oriented Axis' },
+			orientedAxisColor: { type: String, default: '#FF2222', picker: 'color' },
+			orientedAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
+			fixedFullAxis: { type: Boolean, default: true, header: 'Fixed Full Axis' },
+			fixedFullAxisColor: { type: String, default: '#FFFFFF', picker: 'color' },
+			fixedFullAxisOpacity: { type: Number, default: 1, picker: 'slider', range: [0, 1], step: 0.05 },
 			...responsiveProps()
-		}, renderIcon('straighten', 'FreeRuler'));
+		}, renderComponentNameWithIcon('straighten', 'FreeRuler'));
 	}
 	render() {
 		const hdlStyle = {
@@ -56,6 +57,16 @@ export default class FreeRuler extends Component {
 		this.canvas = dom.querySelector('canvas');
 		this.grabbedHandler = null;
 		this.offsets = { c01: { x: 0, y: 0 }, c02: { x: 0, y: 0 } };
+
+		let hdlS = this.handler01.getBoundingClientRect().width / 2;
+
+		this.handler01.style.left = ((document.documentElement.clientWidth / 2) - hdlS - 150) + 'px';
+		this.handler02.style.left = ((document.documentElement.clientWidth / 2) - hdlS + 150) + 'px';
+		this.midHandler.style.left = ((document.documentElement.clientWidth / 2) - hdlS) + 'px';
+
+		this.handler01.style.top = ((document.documentElement.clientHeight / 2) - hdlS - 150) + 'px';
+		this.handler02.style.top = ((document.documentElement.clientHeight / 2) - hdlS + 150) + 'px';
+		this.midHandler.style.top = ((document.documentElement.clientHeight / 2) - hdlS) + 'px';
 
 		document.addEventListener('mousedown', e => this.handlerPressed(e));
 		document.addEventListener('mousedown', e => this.handlerPressed(e));
@@ -124,10 +135,10 @@ export default class FreeRuler extends Component {
 
 		this.canvas.style.top = 0;
 		this.canvas.style.left = 0;
-		this.canvas.width = window.innerWidth;
-		this.canvas.height = window.innerHeight;
-		this.canvas.style.width = window.innerWidth + 'px';
-		this.canvas.style.height = window.innerHeight + 'px';
+		this.canvas.width = document.documentElement.clientWidth - 1;
+		this.canvas.height = document.documentElement.clientHeight - 1;
+		this.canvas.style.width = this.canvas.width + 'px';
+		this.canvas.style.height = this.canvas.height + 'px';
 
 		let angleTo2 = {
 			rad: Math.atan2(c02.y - c01.y, c02.x - c01.x),
@@ -144,6 +155,7 @@ export default class FreeRuler extends Component {
 		let ctx = this.canvas.getContext('2d');
 		ctx.globalAlpha = 1;
 		ctx.imageSmoothingEnabled = true;
+		ctx.translate(0.5, 0.5);
 		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		if (this.state.ruler) {
 			ctx.globalAlpha = this.state.rulerOpacity;
