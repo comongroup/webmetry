@@ -41,6 +41,18 @@ body {
 		}
 	}
 
+	a {
+		cursor: pointer;
+		text-decoration: none;
+
+		&:active,
+		&:focus,
+		&:hover {
+			cursor: pointer;
+			text-decoration: none;
+		}
+	}
+
 	input, select, textarea {
 		display: block;
 		font-family: inherit !important;

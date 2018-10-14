@@ -27,17 +27,18 @@
 
 		> li {
 			display: block;
-			padding: 12px 10px;
 
 			&.wm-inspector-dialog-list-header {
 				font-weight: bold;
 				opacity: 0.65;
-				padding-bottom: 5px;
+				padding: 12px 10px 5px;
 				text-transform: uppercase;
 			}
 
-			&.wm-inspector-dialog-list-item {
+			a {
 				cursor: pointer;
+				display: block;
+				padding: 12px 10px;
 
 				&:active,
 				&:hover {

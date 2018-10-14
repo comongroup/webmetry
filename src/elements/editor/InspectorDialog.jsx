@@ -15,8 +15,8 @@ export default class InspectorDialog extends Component {
 				children.push(<li className="wm-inspector-dialog-list-header">{item.header}</li>);
 			}
 			children.push(
-				<li className="wm-inspector-dialog-list-item" onClick={e => this.emit('select', item, e, this)}>
-					{item.title}
+				<li onClick={e => this.emit('select', item, e, this)}>
+					<a>{item.title}</a>
 				</li>
 			);
 		}

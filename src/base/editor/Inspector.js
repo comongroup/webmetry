@@ -169,9 +169,10 @@ export default class Inspector extends DialogHandler {
 		this.spawnDialog({
 			title: 'Import/export...',
 			items: [
-				{ title: renderIcon('code', 'Components\' JSON'), ...mapIO('import', 'json'), header: 'Import' },
-				{ title: renderIcon('code', 'Components\' JSON'), ...mapIO('export', 'json'), header: 'Export' },
-				{ title: renderIcon('link', 'Bookmarklet'), ...mapIO('export', 'bookmarklet') }
+				{ title: renderIcon('code', 'Config JSON'), ...mapIO('import', 'json'), header: 'Import' },
+				{ title: renderIcon('code', 'Config JSON'), ...mapIO('export', 'json'), header: 'Export' },
+				{ title: renderIcon('link', 'Bookmarklet'), ...mapIO('export', 'bookmarklet') },
+				{ title: renderIcon('important_devices', 'HTML Embed'), ...mapIO('export', 'embed') }
 			]
 		}).on('select', io => performInspectorIO(this, io));
 	}
