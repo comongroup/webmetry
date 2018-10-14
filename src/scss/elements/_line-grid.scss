@@ -1,6 +1,6 @@
-.wm-baselines {
+.wm-line-grid {
 	z-index: $z-index-general;
-	display: block;	
+	display: block;
 	pointer-events: none;
 	position: absolute;
 	top: 0;
@@ -10,13 +10,5 @@
 	&.fixed {
 		position: fixed;
 		bottom: 0;
-	}
-
-	div {
-		width: 100%;
-
-		&.gap {
-			visibility: hidden;
-		}
 	}
 }
