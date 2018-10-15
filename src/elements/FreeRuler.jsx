@@ -1,4 +1,5 @@
 import Component from '../base/Component';
+import { keyProps } from '../utils/editor/keyUtils';
 import { nameProps, renderComponentNameWithIcon } from '../utils/editor/nameUtils';
 import { responsiveProps } from '../utils/editor/responsiveUtils';
 
@@ -6,6 +7,7 @@ export default class FreeRuler extends Component {
 	constructor(options) {
 		super(options, {
 			...nameProps('FreeRuler'),
+			...keyProps('shift:r'),
 			gridSize: { type: Number, default: 10, header: 'Main Properties' },
 			snapToGrid: { type: Boolean, default: true },
 			axisLength: { type: Number, default: 50 },

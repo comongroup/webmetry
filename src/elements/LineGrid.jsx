@@ -1,4 +1,5 @@
 import Component from '../base/Component';
+import { keyProps } from '../utils/editor/keyUtils';
 import { nameProps, renderComponentNameWithIcon } from '../utils/editor/nameUtils';
 import { responsiveProps } from '../utils/editor/responsiveUtils';
 
@@ -6,6 +7,7 @@ export default class LineGrid extends Component {
 	constructor(options) {
 		super(options, {
 			...nameProps('LineGrid'),
+			...keyProps('shift:l'),
 			opacity: { type: Number, default: 0.25, picker: 'slider', range: [0, 1], step: 0.05, header: 'Main Properties' },
 			horizontalLines: { type: Boolean, default: true, header: 'Horizontal Lines' },
 			horizontalGapSize: { type: String, default: '25px' },
