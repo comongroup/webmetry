@@ -4,9 +4,11 @@ import DialogHandler from './DialogHandler';
 import PropertyList from '../../elements/editor/PropertyList';
 import InspectorHeader from '../../elements/editor/InspectorHeader';
 import { mapIO, performInspectorIO, repo } from '../../utils/io';
+import { dictionary } from '../../utils/keys';
 import { bindNameEventsTo, unbindNameEventsFrom } from '../../utils/editor/nameUtils';
 import renderIcon from '../../utils/editor/renderIcon';
 import { bindResponsiveEventsTo, shouldComponentBeVisible, unbindResponsiveEventsFrom } from '../../utils/editor/responsiveUtils';
+import observeObject from '../../utils/observeObject';
 
 export default class Inspector extends DialogHandler {
 	constructor(parent, handler) {
@@ -14,6 +16,25 @@ export default class Inspector extends DialogHandler {
 		const inside = document.createElement('div');
 		inside.className = 'wm-inspector-inside';
 		super(inside);
+
+		// create local state
+		const state = {
+			hidden: false
+		};
+		this.state = observeObject(state, (key, newValue, oldValue) => {
+			this.emit('change:' + key, newValue, oldValue);
+			this.emit('change', key, newValue, oldValue);
+		});
+
+		// show or hide webmetry
+		this.on('change:hidden', hidden => {
+			this.handler.parent.classList.toggle('-wm-invisible', hidden);
+		});
+
+		// add webmetry keybindings straight away, like SHIFT+W
+		dictionary.on('up:shift:w', () => {
+			this.state.hidden = !this.state.hidden;
+		});
 
 		// create container element
 		this.container = document.createElement('div');

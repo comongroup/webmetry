@@ -45,6 +45,7 @@ body {
 	}
 
 	a {
+		color: inherit;
 		cursor: pointer;
 		text-decoration: none;
 
@@ -57,6 +58,7 @@ body {
 	}
 
 	input, select, textarea {
+		color: inherit;
 		display: block;
 		font-family: inherit !important;
 		font-size: inherit !important;
@@ -119,9 +121,9 @@ body {
 	@import 'elements/column-grid';
 	@import 'elements/free-ruler';
 	@import 'elements/baselines';
+}
 
-	.-wm-invisible {
-		display: none !important;
-		visibility: hidden !important;
-	}
+.-wm-invisible {
+	display: none !important;
+	visibility: hidden !important;
 }
