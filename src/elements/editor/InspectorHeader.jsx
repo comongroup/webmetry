@@ -11,9 +11,9 @@ export default class InspectorHeader extends Component {
 	}
 	render() {
 		const options = map(this.state.options, option => {
-			return <span className="-wmfl-option" title={option.title} onClick={option.onClick}>
+			return <a className="-wmfl-option" title={option.title} onClick={option.onClick}>
 				<i className="material-icons">{option.icon}</i>
-			</span>;
+			</a>;
 		});
 		return <div className="wm-inspector-header -wm-flex">
 			<span className="-wmfl-title">

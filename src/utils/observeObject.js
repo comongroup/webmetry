@@ -1,7 +1,7 @@
 // based off of es6 guide
 // https://blog.revathskumar.com/2016/02/es6-observe-change-in-object-using-proxy.html
 
-export default function onChange(object, callback) {
+export default function observeObject(object, callback) {
 	const handler = {
 		set(target, key, value) {
 			const oldValue = target[key];

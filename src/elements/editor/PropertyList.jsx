@@ -1,11 +1,13 @@
 import camelCase from 'lodash/camelCase';
 import Component from '../../base/Component';
 import renderPropEditor from '../../utils/editor/renderPropEditor';
+import { hasAnyResponsivePropsFilled } from '../../utils/editor/responsiveUtils';
 
 export default class PropertyList extends Component {
 	constructor(options) {
 		super(options, {
 			target: { type: Component, omit: true },
+			responsiveVisible: { type: Boolean, omit: true },
 			expanded: { type: Boolean, default: true },
 			visible: { type: Number, default: 2 }
 		});
@@ -32,16 +34,29 @@ export default class PropertyList extends Component {
 		}
 		return <div className={`wm-property-list${this.state.expanded ? ' -wm-expanded' : ''}`}>
 			<div className="wm-property-list-header -wm-flex" onClick={e => this.toggleExpandedState(e)}>
-				<span className="-wmfl-option" title={this.state.expanded ? 'Hide properties' : 'Expand properties'}>
-					{this.state.expanded
-						? <i className="material-icons">keyboard_arrow_up</i>
-						: <i className="material-icons">keyboard_arrow_down</i>}
-				</span>
+				<a className="-wmfl-option" title={this.state.expanded
+					? 'Hide properties'
+					: 'Expand properties'}
+				>
+					<i className="material-icons">
+						{this.state.expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
+					</i>
+				</a>
 				<span className="-wmfl-title">{target.getName()}</span>
-				<span className="-wmfl-option -wmfl-on-hover" title="Delete component" onClick={e => this.trashTarget(e)}>
+				<a className="-wmfl-option -wmfl-on-hover" title="Delete component" onClick={e => this.trashTarget(e)}>
 					<i className="material-icons">delete_outline</i>
-				</span>
-				<span className="-wmfl-option" title="Toggle visibility mode" onClick={e => this.toggleVisibilityMode(e)}>
+				</a>
+				{hasAnyResponsivePropsFilled(target)
+					? <span className="-wmfl-option" title={this.state.responsiveVisible
+						? 'Visible in breakpoint'
+						: 'Hidden in breakpoint'}
+					>
+						<i className="material-icons">
+							{this.state.responsiveVisible ? 'visibility' : 'visibility_off'}
+						</i>
+					</span>
+					: null}
+				<a className="-wmfl-option" title="Toggle visibility mode" onClick={e => this.toggleVisibilityMode(e)}>
 					<i className="material-icons">
 						{this.state.visible === 0
 							? 'flash_off'
@@ -49,7 +64,7 @@ export default class PropertyList extends Component {
 								? 'flash_on'
 								: 'flash_auto'}
 					</i>
-				</span>
+				</a>
 			</div>
 			<div className="wm-property-list-props">{children}</div>
 		</div>;
@@ -82,7 +97,6 @@ export default class PropertyList extends Component {
 		this.emit('input', target, prop, convertedValue);
 	}
 	toggleExpandedState(e) {
-		e.stopPropagation();
 		this.state.expanded = !this.state.expanded;
 	}
 	toggleVisibilityMode(e) {

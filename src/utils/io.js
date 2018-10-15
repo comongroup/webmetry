@@ -1,19 +1,17 @@
 import get from 'lodash/get';
 import ComponentRepository from './io/ComponentRepository';
-import exportBookmarkletFromInspector from './io/exportBookmarkletFromInspector';
-import exportJSONFromInspector from './io/exportJSONFromInspector';
-import importConfigToInspector from './io/importConfigToInspector';
-import importJSONToInspector from './io/importJSONToInspector';
+import * as inspectorIO from './io/inspector';
 
 const repo = new ComponentRepository();
 const actions = {
 	'import': {
-		'config': importConfigToInspector,
-		'json': importJSONToInspector
+		'config': inspectorIO.importConfig,
+		'json': inspectorIO.importJSON
 	},
 	'export': {
-		'bookmarklet': exportBookmarkletFromInspector,
-		'json': exportJSONFromInspector
+		'bookmarklet': inspectorIO.exportBookmarklet,
+		'embed': inspectorIO.exportEmbed,
+		'json': inspectorIO.exportJSON
 	}
 };
 
