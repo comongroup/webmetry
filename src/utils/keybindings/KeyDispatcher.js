@@ -46,9 +46,9 @@ export default class KeyDispatcher extends Emitter {
 		this.dispatch('press', e);
 	}
 	onKeyUp(e) {
+		this.dispatch('up', e);
 		const char = this.getChar(e);
 		pull(this.buffer, char);
-		this.dispatch('up', e);
 	}
 	/**
 	 * Processes and returns the character.
@@ -67,8 +67,8 @@ export default class KeyDispatcher extends Emitter {
 			(e.altKey ? 'alt' : undefined),
 			(e.metaKey ? 'meta' : undefined),
 			(e.shiftKey ? 'shift' : undefined),
-			this.getChar(e)
+			...this.buffer
 		];
-		return uniq(filter(arr)).join(':');
+		return uniq(filter(arr)).join('+');
 	}
 }

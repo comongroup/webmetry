@@ -39,10 +39,10 @@ export default class Inspector extends DialogHandler {
 		});
 
 		// add webmetry keybindings straight away, like SHIFT+W
-		dictionary.on('up:shift:w', () => {
+		dictionary.on('up:shift+w', () => {
 			this.state.hideAll = !this.state.hideAll;
 		});
-		dictionary.on('up:shift:q', () => {
+		dictionary.on('up:shift+q', () => {
 			this.state.hideWindow = !this.state.hideWindow;
 		});
 		dictionary.on('up', (e, { combo }) => {

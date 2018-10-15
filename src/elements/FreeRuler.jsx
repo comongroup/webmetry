@@ -7,7 +7,7 @@ export default class FreeRuler extends Component {
 	constructor(options) {
 		super(options, {
 			...nameProps('FreeRuler'),
-			...keyProps('shift:r'),
+			...keyProps('shift+r'),
 			gridSize: { type: Number, default: 10, header: 'Main Properties' },
 			snapToGrid: { type: Boolean, default: true },
 			axisLength: { type: Number, default: 50 },

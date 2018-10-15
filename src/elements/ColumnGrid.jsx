@@ -7,7 +7,7 @@ export default class ColumnGrid extends Component {
 	constructor(options) {
 		super(options, {
 			...nameProps('ColumnGrid'),
-			...keyProps('shift:c'),
+			...keyProps('shift+c'),
 			columnNumber: { type: Number, default: 12, header: 'Main Properties' },
 			columnColorEven: { type: String, default: '#000088', picker: 'color' },
 			columnColorOdd: { type: String, default: '#000080', picker: 'color' },

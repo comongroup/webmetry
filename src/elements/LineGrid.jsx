@@ -7,7 +7,7 @@ export default class LineGrid extends Component {
 	constructor(options) {
 		super(options, {
 			...nameProps('LineGrid'),
-			...keyProps('shift:l'),
+			...keyProps('shift+l'),
 			opacity: { type: Number, default: 0.25, picker: 'slider', range: [0, 1], step: 0.05, header: 'Main Properties' },
 			horizontalLines: { type: Boolean, default: true, header: 'Horizontal Lines' },
 			horizontalGapSize: { type: String, default: '25px' },
