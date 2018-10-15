@@ -123,7 +123,7 @@ export default class Inspector extends DialogHandler {
 		// set container position
 		this.state.snappedToBottom = false;
 		this.setContainerPosition(0, 0);
-		this.moveContainerWithinBounds();
+		this.onResize();
 
 		// on resize?
 		this.onResize = debounce(this.onResize.bind(this), 500);
