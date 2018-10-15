@@ -40,9 +40,9 @@ export function exportJSON(inspector) {
 export function getConfig(inspector) {
 	const obj = {
 		inspector: {
-			x: inspector.x,
-			y: inspector.y,
-			snappedToBottom: inspector.snappedToBottom
+			x: inspector.state.x,
+			y: inspector.state.y,
+			snappedToBottom: inspector.state.snappedToBottom
 		}
 	};
 	if (inspector.handler.components.length > 0) {
@@ -144,7 +144,7 @@ export function importConfig(inspector, repo, io) {
 
 		// change inspector properties
 		if (inspectorProps) {
-			inspector.snappedToBottom = inspectorProps.snappedToBottom;
+			inspector.state.snappedToBottom = inspectorProps.snappedToBottom;
 			inspector.setContainerPosition(inspectorProps.x, inspectorProps.y);
 			inspector.moveContainerWithinBounds();
 		}

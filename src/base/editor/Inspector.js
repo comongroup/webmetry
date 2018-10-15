@@ -19,7 +19,10 @@ export default class Inspector extends DialogHandler {
 
 		// create local state
 		const state = {
-			hidden: false
+			hidden: false,
+			snappedToBottom: false,
+			x: 0,
+			y: 0
 		};
 		this.state = observeObject(state, (key, newValue, oldValue) => {
 			this.emit('change:' + key, newValue, oldValue);
@@ -118,7 +121,7 @@ export default class Inspector extends DialogHandler {
 		this.container.appendChild(inside);
 
 		// set container position
-		this.snappedToBottom = false;
+		this.state.snappedToBottom = false;
 		this.setContainerPosition(0, 0);
 		this.moveContainerWithinBounds();
 
@@ -146,8 +149,8 @@ export default class Inspector extends DialogHandler {
 		});
 	}
 	setContainerPosition(x, y) {
-		this.x = x;
-		this.y = y;
+		this.state.x = x;
+		this.state.y = y;
 		this.container.style.left = x + 'px';
 		this.container.style.top = y + 'px';
 	}
@@ -162,7 +165,7 @@ export default class Inspector extends DialogHandler {
 		// check if container should be snapped to bottom
 		const docEl = (document.documentElement || document.body);
 		const maxTop = docEl.clientHeight - this.container.clientHeight;
-		this.snappedToBottom = (currentTop - y) >= maxTop;
+		this.state.snappedToBottom = (currentTop - y) >= maxTop;
 	}
 	moveContainerWithinBounds() {
 		// before getting sizes and whatnot,
@@ -172,7 +175,7 @@ export default class Inspector extends DialogHandler {
 			const maxLeft = docEl.clientWidth - this.container.clientWidth;
 			const maxTop = docEl.clientHeight - this.container.clientHeight;
 			const currentLeft = parseInt(this.container.style.left || 0, 10);
-			const currentTop = !this.snappedToBottom
+			const currentTop = !this.state.snappedToBottom
 				? parseInt(this.container.style.top || 0, 10)
 				: maxTop; // snap to bottom cause boolean tells us to
 			this.setContainerPosition(
