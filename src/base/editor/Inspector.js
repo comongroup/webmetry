@@ -25,6 +25,7 @@ export default class Inspector extends DialogHandler {
 			x: 0,
 			y: 0
 		};
+		this.defaults = { ...state };
 		this.state = observeObject(state, (key, newValue, oldValue) => {
 			this.emit('change:' + key, newValue, oldValue);
 			this.emit('change', key, newValue, oldValue);
@@ -33,21 +34,27 @@ export default class Inspector extends DialogHandler {
 		// show or hide webmetry
 		this.on('change:hideAll', hideAll => {
 			this.handler.parent.classList.toggle('-wm-invisible', hideAll);
+			if (!hideAll) {
+				this.moveContainerWithinBounds();
+			}
 		});
 		this.on('change:hideWindow', hideWindow => {
 			this.container.classList.toggle('-wm-invisible', hideWindow);
+			if (!hideWindow) {
+				this.moveContainerWithinBounds();
+			}
 		});
 
-		// add webmetry keybindings straight away, like SHIFT+W
-		dictionary.on('up:shift+w', () => {
-			this.state.hideAll = !this.state.hideAll;
-		});
-		dictionary.on('up:shift+q', () => {
-			this.state.hideWindow = !this.state.hideWindow;
-		});
-		dictionary.on('up', (e, { combo }) => {
-			checkInspectorOnKey(e, this, combo);
-		});
+		// add webmetry keybindings straight away
+		dictionary.on('up:shift+w', () => (this.state.hideAll = !this.state.hideAll));
+		dictionary.on('up:shift+q', () => (this.state.hideWindow = !this.state.hideWindow));
+		dictionary.on('up', (e, { combo }) => checkInspectorOnKey(e, this, combo));
+
+		// add keybindings for IO
+		dictionary.on('up:control+shift+i+j', () => performInspectorIO(this, mapIO('import', 'json')));
+		dictionary.on('up:control+shift+e+j', () => performInspectorIO(this, mapIO('export', 'json')));
+		dictionary.on('up:control+shift+e+h', () => performInspectorIO(this, mapIO('export', 'embed')));
+		dictionary.on('up:control+shift+e+b', () => performInspectorIO(this, mapIO('export', 'bookmarklet')));
 
 		// create container element
 		this.container = document.createElement('div');

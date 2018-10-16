@@ -1,5 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
+import pickBy from 'lodash/pickBy';
 
 // URL for file embeds
 const url = 'https://luisjs.io/webmetry.min.js';
@@ -38,22 +39,21 @@ export function exportJSON(inspector) {
 }
 
 export function getConfig(inspector) {
-	const obj = {
-		inspector: {
-			x: inspector.state.x,
-			y: inspector.state.y,
-			snappedToBottom: inspector.state.snappedToBottom
-		}
-	};
+	const result = {};
+	const inspectorProps = pickBy(inspector.state, (value, prop) => {
+		return value !== inspector.defaults[prop];
+	});
+	if (!isEmpty(inspectorProps)) {
+		result.inspector = inspectorProps;
+	}
 	if (inspector.handler.components.length > 0) {
-		obj.components = map(inspector.handler.components, component => {
+		result.components = map(inspector.handler.components, component => {
 			const obj = {
 				type: component.__internalId
 			};
 			const list = inspector.findCorrespondingPropList(component);
 			const listObject = list ? list.serialize(true) : {};
 			const optionsObject = component.serialize(true);
-			console.log(obj.type, optionsObject, listObject);
 			if (!isEmpty(optionsObject)) {
 				obj.options = optionsObject;
 			}
@@ -63,7 +63,7 @@ export function getConfig(inspector) {
 			return obj;
 		});
 	}
-	return obj;
+	return result;
 }
 
 export function getJSON(inspector, spacer) {
@@ -88,9 +88,7 @@ export function importConfig(inspector, repo, io) {
 			}
 
 			// analyse properties in config
-			inspectorProps.x = parseFloat(config.inspector.x) || 0;
-			inspectorProps.y = parseFloat(config.inspector.y) || 0;
-			inspectorProps.snappedToBottom = Boolean(config.inspector.snappedToBottom) || false;
+			Object.assign(inspectorProps, config.inspector);
 		}
 
 		// check if components object exists and is not an array
@@ -144,7 +142,7 @@ export function importConfig(inspector, repo, io) {
 
 		// change inspector properties
 		if (inspectorProps) {
-			inspector.state.snappedToBottom = inspectorProps.snappedToBottom;
+			Object.assign(inspector.state, inspectorProps || {});
 			inspector.setContainerPosition(inspectorProps.x, inspectorProps.y);
 			inspector.moveContainerWithinBounds();
 		}
