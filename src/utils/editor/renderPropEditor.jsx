@@ -1,4 +1,5 @@
-import { map, startCase } from 'lodash';
+import map from 'lodash/map';
+import startCase from 'lodash/startCase';
 
 export function renderPropEditorInput(target, propKey, propObject, value, isRecursive) {
 	const name = 'wmprop-' + propKey;
@@ -46,7 +47,7 @@ export function renderPropEditorInput(target, propKey, propObject, value, isRecu
 }
 
 export default function renderPropEditor(target, propKey, propObject, value) {
-	const name = startCase(propKey);
+	const name = propObject.label || startCase(propKey);
 	const title = propObject.title || name;
 	const input = renderPropEditorInput(target, propKey, propObject, value);
 

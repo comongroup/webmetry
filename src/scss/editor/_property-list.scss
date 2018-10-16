@@ -4,7 +4,6 @@
 
 	> .wm-property-list-header {
 		background: transparentize(black, 0.75);
-		cursor: pointer;
 		font-weight: bold;
 		padding: 2px 5px;
 		user-select: none;
@@ -25,11 +24,13 @@
 			text-transform: uppercase;
 		}
 
-		> .wm-property-field {
+		> label.wm-property-field {
+			color: inherit;
 			display: flex;
 			align-items: center;
 			justify-content: flex-start;
 			min-height: 30px;
+			margin: 0px auto;
 			padding: 2px 0px;
 
 			> .prop-name {

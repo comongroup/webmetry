@@ -11,12 +11,8 @@
 		"expect": true
 	},
 	"parserOptions": {
-		"ecmaVersion": 6,
-		"ecmaFeatures": {
-			"experimentalObjectRestSpread": true
-		},
-		"parser": "babel-eslint",
-		"sourceType": "module"
+		"ecmaVersion": 2018,
+		"parser": "babel-eslint"
 	},
 	"rules": {
 		"arrow-parens": ["error", "as-needed"],
@@ -26,6 +22,7 @@
 		"no-console": "off",
 		"no-extra-semi": "error",
 		"no-tabs": "off",
+		"no-trailing-spaces": ["error", { "ignoreComments": true }],
 		"semi": ["error", "always"],
 		"space-before-function-paren": ["error", "never"]
 	}

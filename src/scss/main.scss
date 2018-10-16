@@ -13,15 +13,18 @@ body {
 	position: static;
 
 	* {
-		box-sizing: border-box;
+		box-sizing: border-box !important;
+		font-family: 'Courier New', Courier, monospace;
 	}
 
 	@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 	.material-icons {
 		display: block;
+		font-family: 'Material Icons' !important; // counteract the thing we did above with font-family
 		font-size: 24px;
 		line-height: 6px; // why? I don't know. but it looks best in chrome that way
+		max-width: 32px;
 	}
 
 	.wm-icon {
@@ -41,10 +44,24 @@ body {
 		}
 	}
 
+	a {
+		color: inherit;
+		cursor: pointer;
+		text-decoration: none;
+
+		&:active,
+		&:focus,
+		&:hover {
+			cursor: pointer;
+			text-decoration: none;
+		}
+	}
+
 	input, select, textarea {
+		color: inherit;
 		display: block;
-		font-family: inherit;
-		font-size: inherit;
+		font-family: inherit !important;
+		font-size: inherit !important;
 		margin: 0;
 		padding: 0;
 	}
@@ -54,22 +71,18 @@ body {
 		align-items: center;
 		justify-content: flex-start;
 
-		> span[class^="-wmfl"] {
+		> [class^="-wmfl"] {
 			display: block;
 
 			&.-wmfl-option {
 				color: transparentize(#fff, 0.5);
-				cursor: pointer;
 				padding: 10px 5px;
-
-				&:hover {
-					color: #fff;
-				}
 			}
 
 			&.-wmfl-title {
 				margin-right: auto;
 				padding: 10px 5px;
+				padding-left: 0;
 				pointer-events: none;
 
 				&:first-child {
@@ -85,18 +98,32 @@ body {
 			}
 		}
 
+		> .-wmfl-option {
+			cursor: default;
+		}
+
+		> a[class^="-wmfl"] {
+			cursor: pointer;
+
+			&:hover {
+				color: #fff;
+			}
+		}
+
 		&:not(:hover) {
 			.-wmfl-on-hover {
-				display: none;
+				visibility: hidden;
 			}
 		}
 	}
 
 	@import 'editor/inspector';
 	@import 'elements/column-grid';
+	@import 'elements/free-ruler';
+	@import 'elements/line-grid';
+}
 
-	.-wm-invisible {
-		display: none !important;
-		visibility: hidden !important;
-	}
+.-wm-invisible {
+	display: none !important;
+	visibility: hidden !important;
 }
