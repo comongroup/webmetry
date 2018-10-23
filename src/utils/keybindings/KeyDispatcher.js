@@ -19,7 +19,6 @@ export default class KeyDispatcher extends Emitter {
 		this.initialize();
 	}
 	initialize() {
-		// bind to document
 		document.addEventListener('keydown', this.onKeyDown);
 		document.addEventListener('keypress', this.onKeyPress);
 		document.addEventListener('keyup', this.onKeyUp);
