@@ -2,6 +2,7 @@ import Component from '../base/Component';
 import { keyProps } from '../utils/editor/keyUtils';
 import { nameProps, renderComponentNameWithIcon } from '../utils/editor/nameUtils';
 import { responsiveProps } from '../utils/editor/responsiveUtils';
+import convertUnitToPx from '../utils/convertUnitToPx';
 
 export default class LineGrid extends Component {
 	constructor(options) {
@@ -9,13 +10,19 @@ export default class LineGrid extends Component {
 			...nameProps('LineGrid'),
 			...keyProps('shift+l'),
 			opacity: { type: Number, default: 0.25, picker: 'slider', range: [0, 1], step: 0.05, header: 'Main Properties' },
+			originX: { type: String, default: '50%' },
+			originY: { type: String, default: '0%' },
 			horizontalLines: { type: Boolean, default: true, header: 'Horizontal Lines' },
-			horizontalGapSize: { type: String, default: '25px' },
 			horizontalLineColor: { type: String, default: '#FFFFFF', picker: 'color' },
+			horizontalLineColorOrigin: { type: String, default: '#FF0000', picker: 'color' },
+			horizontalLineThickness: { type: String, default: '1px' },
+			gapBetweenHorizontalLines: { type: String, default: '25px' },
 			verticalLines: { type: Boolean, default: true, header: 'Vertical Lines' },
-			verticalGapSize: { type: String, default: '25px' },
 			verticalLineColor: { type: String, default: '#FFFFFF', picker: 'color' },
-			fixed: { type: Boolean, default: true, header: 'Behaviour' },
+			verticalLineColorOrigin: { type: String, default: '#FF0000', picker: 'color' },
+			verticalLineThickness: { type: String, default: '1px' },
+			gapBetweenVerticalLines: { type: String, default: '25px' },
+			fixed: { type: Boolean, default: false, header: 'Behaviour' },
 			...responsiveProps()
 		}, renderComponentNameWithIcon('grid_on', 'LineGrid'));
 	}
@@ -27,11 +34,6 @@ export default class LineGrid extends Component {
 		let containerStyles = {
 			opacity: this.state.opacity
 		};
-
-		if (!this.state.fixed) {
-			containerStyles.height = document.documentElement.offsetHeight;
-		}
-
 		return <canvas className={containerClasses} style={containerStyles}></canvas>;
 	}
 	rendered(dom) {
@@ -44,46 +46,68 @@ export default class LineGrid extends Component {
 		this.updateCanvas();
 	}
 	updateCanvas() {
-		let gapSizes = [this.state.horizontalGapSize, this.state.verticalGapSize];
-		let gsTgts = [0, 0];
-		for (let s = 0; s < gapSizes.length; s++) {
-			let dummy = document.createElement('DIV');
-			dummy.style.height = gapSizes[s];
-			dummy.style.width = '1px';
-			document.body.appendChild(dummy);
-			gsTgts[s] = Math.max(0.5, dummy.getBoundingClientRect().height);
-			dummy.remove();
-		}
+		const pixelRatio = 1; // TODO: transform into variable
+		const rect = this.canvas.getBoundingClientRect();
+		const width = this.canvas.width = rect.width * pixelRatio;
+		const height = this.canvas.height = rect.height * pixelRatio;
 
-		this.canvas.style.top = 0;
-		this.canvas.style.left = 0;
-		this.canvas.style.right = 0;
-		this.canvas.width = document.documentElement.clientWidth - 1;
-		this.canvas.height = this.state.fixed ? window.innerHeight : document.documentElement.offsetHeight;
-		this.canvas.style.width = this.canvas.width + 'px';
-		this.canvas.style.height = this.canvas.height + 'px';
-
-		let ctx = this.canvas.getContext('2d');
+		const ctx = this.canvas.getContext('2d');
 		ctx.globalAlpha = 1;
-		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		ctx.lineWidth = 1;
-		ctx.translate(0.5, 0.5);
+		ctx.clearRect(0, 0, width, height);
+
 		if (this.state.verticalLines) {
-			ctx.strokeStyle = this.state.verticalLineColor;
-			for (let x = 0; x <= this.canvas.width; x += gsTgts[0]) {
+			const thickness = Math.max(1, convertUnitToPx(this.state.verticalLineThickness, 'width')) * pixelRatio;
+			const gap = convertUnitToPx(this.state.gapBetweenVerticalLines, 'width') * pixelRatio;
+
+			// calc position (with offsets cause of origin)
+			const origin = convertUnitToPx(this.state.originX, 'width', this.state.fixed ? 'fixed' : 'absolute') * pixelRatio;
+			const affect = (origin / width - 0.5) * -2; // how much to offset, to make edge lines available if origin not middle
+			const start = origin + affect * (thickness / 2);
+			let x = start;
+			let dir = thickness + gap;
+
+			// draw now
+			ctx.strokeStyle = this.state.verticalLineColorOrigin;
+			ctx.lineWidth = thickness;
+			while (x >= 0 && x <= width) {
 				ctx.beginPath();
 				ctx.moveTo(x, 0);
-				ctx.lineTo(x, this.canvas.height);
+				ctx.lineTo(x, height);
 				ctx.stroke();
+				ctx.strokeStyle = this.state.verticalLineColor;
+				x += dir;
+				if (x >= width) {
+					dir *= -1;
+					x = start + dir;
+				}
 			}
 		}
+
 		if (this.state.horizontalLines) {
-			ctx.strokeStyle = this.state.horizontalLineColor;
-			for (let y = 0; y <= this.canvas.height; y += gsTgts[1]) {
+			const thickness = Math.max(1, convertUnitToPx(this.state.horizontalLineThickness, 'height')) * pixelRatio;
+			const gap = convertUnitToPx(this.state.gapBetweenHorizontalLines, 'height') * pixelRatio;
+
+			// calc position (with offsets cause of origin)
+			const origin = convertUnitToPx(this.state.originY, 'height', this.state.fixed ? 'fixed' : 'absolute') * pixelRatio;
+			const affect = (origin / height - 0.5) * -2; // how much to offset, to make edge lines available if origin not middle
+			const start = origin + affect * (thickness / 2);
+			let y = start;
+			let dir = thickness + gap;
+
+			// draw now
+			ctx.strokeStyle = this.state.horizontalLineColorOrigin;
+			ctx.lineWidth = thickness;
+			while (y >= 0 && y <= height) {
 				ctx.beginPath();
 				ctx.moveTo(0, y);
-				ctx.lineTo(this.canvas.width, y);
+				ctx.lineTo(width, y);
 				ctx.stroke();
+				ctx.strokeStyle = this.state.horizontalLineColor;
+				y += dir;
+				if (y >= height) {
+					dir *= -1;
+					y = start + dir;
+				}
 			}
 		}
 	}

@@ -9,16 +9,102 @@
 		* {
 			box-sizing: border-box;
 		}
+		html {
+			font-size: 16px;
+		}
 		body {
 			background: black;
 			color: white;
+			font-family: 'Courier New', Courier, monospace;
+			font-size: 1rem;
+			line-height: 1.5;
 			margin: 0;
+		}
+		.site-wrapper {
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 1rem;
+		}
+		a {
+			color: white;
+		}
+		a:hover {
+			color: rgba(255, 255, 255, 0.5);
+		}
+		h1,
+		h2 {
+			margin: 2rem 0 1rem;
+		}
+		h1 {
+			font-size: 4rem;
+		}
+		h2 {
+			font-size: 2rem;
+		}
+		hr {
+			background: rgba(255, 255, 255, 0.5);
+			border: none;
+			height: 2px;
+			margin: 2rem 0;
+		}
+		code {
+			background: rgba(255, 255, 255, 0.1);
+			border: 1px solid rgba(255, 255, 255, 0.5);
+			border-radius: 4px;
+			display: inline-block;
+			padding: 0px 4px;
+		}
+		footer nav {
+			display: flex;
+			align-items: center;
+			justify-content: space-evenly;
+			margin: 0;
+			padding: 0;
+			text-align: center;
+		}
+		footer nav div {
+			padding: 5px;
 		}
 	</style>
 </head>
 <body>
+	<div class="site-wrapper">
+		<header>
+			<h1>WEBMETRY</h1>
+		</header>
+		<section>
+			<p>Webmetry is a tool that will help you debug some of your site's styles while you're developing it.</p>
+			<p>To see it in action, press <code>Shift+W</code> to toggle it.</p>
+		</section>
+		<hr>
+		<section>
+			<h2>Still in development!</h2>
+			<p>
+				We are actively developing both Webmetry and this website,
+				and we know there are many things still missing.
+			</p>
+			<p>
+				Feel free to <a href="https://github.com/comongroup/webmetry/issues">open an issue</a> or a
+				<a href="https://github.com/comongroup/webmetry/pulls">pull request</a> if you want to contribute.
+			</p>
+		</section>
+		<hr>
+		<footer>
+			<nav>
+				<div>
+					Made by <a href="https://www.comon.pt/" target="_blank">comOn</a>
+				</div>
+				<div>
+					<a href="https://github.com/comongroup/webmetry/">GitHub Repo</a>
+				</div>
+			</nav>
+		</footer>
+	</div>
 	<script>
 		window.wmConfig = {
+			"inspector": {
+				"hideAll": true
+			},
 			"components": [
 				{
 					"type": "ColumnGrid"
